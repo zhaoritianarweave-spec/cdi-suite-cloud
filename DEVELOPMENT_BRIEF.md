@@ -10,7 +10,7 @@
 | **运营版路径** | `/Users/hesiyuan/Desktop/Claude/cdi-suite-cloud/` |
 | **线上地址** | `https://cdi-suite-cloud-f3svb9i29ma9kpwxgtdc6l.streamlit.app` |
 | **GitHub 仓库** | `https://github.com/zhaoritianarweave-spec/cdi-suite-cloud` (Public) |
-| **Supabase 项目** | `https://gcnozjedaigpoveojqes.supabase.co` |
+| **Supabase 项目** | (see Streamlit Cloud Secrets) |
 | **当前状态** | 已上线，登录/注册/3个功能Tab均可用 |
 
 ---
