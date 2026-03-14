@@ -63,9 +63,13 @@ cdi-suite-cloud/
 
 ### Secrets 配置（Streamlit Cloud）
 ```toml
-GEMINI_API_KEY = "AIzaSyC65V4TzK8m5X4VVu3zlg7nhGcEUp02B1A"
-SUPABASE_URL = "https://gcnozjedaigpoveojqes.supabase.co"
-SUPABASE_KEY = "eyJhbGciOiJIUzI1NiIs..."
+GEMINI_API_KEY = "your-gemini-api-key"
+SUPABASE_URL = "your-supabase-url"
+SUPABASE_KEY = "your-supabase-anon-key"
+STRIPE_SECRET_KEY = "your-stripe-secret-key"
+STRIPE_PRO_MONTHLY_PRICE_ID = "price_xxx"
+STRIPE_PRO_ANNUAL_PRICE_ID = "price_xxx"
+APP_URL = "your-app-url"
 ```
 
 ---
