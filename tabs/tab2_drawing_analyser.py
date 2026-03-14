@@ -229,7 +229,6 @@ def render():
             if not _allowed:
                 render_quota_exceeded()
                 st.stop()
-            record_usage(_user["id"], "drawing_analyser", gemini_client.get_model_id())
         st.markdown("---")
 
         focus_keys = [ANALYSIS_FOCUS[f] for f in selected_focus]
@@ -308,6 +307,9 @@ def render():
             _render_progress(100, "", done=True)
             st.session_state["tab2_results"] = result_text
             st.session_state["tab2_focus_keys"] = focus_keys
+            # Record usage only after successful analysis
+            if _user:
+                record_usage(_user["id"], "drawing_analyser", gemini_client.get_model_id())
         else:
             progress_container.empty()
             status_text.empty()

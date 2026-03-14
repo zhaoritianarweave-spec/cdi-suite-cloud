@@ -387,7 +387,6 @@ def render():
             if not _allowed:
                 render_quota_exceeded()
                 st.stop()
-            record_usage(_user["id"], "site_renderer", "image-gen")
         st.markdown("---")
 
         styles_str = style
@@ -528,6 +527,9 @@ def render():
             st.session_state["tab1_results"] = results
             if anchor_image_bytes:
                 st.session_state["tab1_anchor_bytes"] = anchor_image_bytes
+            # Record usage only after successful generation
+            if _user:
+                record_usage(_user["id"], "site_renderer", "image-gen")
         else:
             st.error("Generation failed. Please adjust parameters and retry.")
 

@@ -24,3 +24,42 @@ create policy "Users can insert own usage"
 create policy "Users can read own usage"
     on usage_logs for select
     using (auth.uid() = user_id);
+
+-- ===========================================================================
+-- Subscriptions table — tracks user plan and Stripe billing
+-- ===========================================================================
+
+create table if not exists subscriptions (
+    id bigint generated always as identity primary key,
+    user_id uuid not null references auth.users(id) on delete cascade,
+    plan text not null default 'free' check (plan in ('free', 'pro', 'enterprise')),
+    stripe_customer_id text,
+    stripe_subscription_id text,
+    current_period_end timestamptz,
+    status text not null default 'active' check (status in ('active', 'canceled', 'past_due', 'incomplete')),
+    created_at timestamptz default now(),
+    updated_at timestamptz default now(),
+    constraint unique_user_subscription unique (user_id)
+);
+
+-- Index for quick user lookups
+create index if not exists idx_subscriptions_user
+    on subscriptions (user_id);
+
+-- Index for Stripe webhook lookups
+create index if not exists idx_subscriptions_stripe
+    on subscriptions (stripe_customer_id);
+
+-- Enable RLS
+alter table subscriptions enable row level security;
+
+-- Users can read their own subscription
+create policy "Users can read own subscription"
+    on subscriptions for select
+    using (auth.uid() = user_id);
+
+-- Only service role (backend/webhook) can insert/update subscriptions
+-- App code uses the Supabase service role key for writes
+create policy "Service role can manage subscriptions"
+    on subscriptions for all
+    using (auth.role() = 'service_role');

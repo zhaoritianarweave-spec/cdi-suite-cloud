@@ -605,7 +605,6 @@ def render():
             if not _allowed:
                 render_quota_exceeded()
                 st.stop()
-            record_usage(_user["id"], "contract_guard", gemini_client.get_model_id())
         st.markdown("---")
 
         progress_container = st.empty()
@@ -627,6 +626,9 @@ def render():
         if result and "summary" in result:
             _render_progress(progress_container, status_text, 100, "", done=True)
             st.session_state["tab4_results"] = result
+            # Record usage only after successful analysis
+            if _user:
+                record_usage(_user["id"], "contract_guard", gemini_client.get_model_id())
         else:
             progress_container.empty()
             status_text.empty()

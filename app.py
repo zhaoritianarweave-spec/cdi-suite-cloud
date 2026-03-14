@@ -19,6 +19,24 @@ if not render_auth_page():
     st.stop()
 
 # ---------------------------------------------------------------------------
+# Handle Stripe payment redirect (must run before sidebar renders)
+# ---------------------------------------------------------------------------
+from utils.auth import get_user
+
+_params = st.query_params
+if _params.get("payment") == "success" and _params.get("session_id"):
+    _current_user = get_user()
+    if _current_user:
+        from utils.stripe_client import handle_checkout_success
+        if handle_checkout_success(_params["session_id"], _current_user["id"]):
+            # Clear cached plan so sidebar shows updated info
+            st.session_state.pop(f"_plan_{_current_user['id']}", None)
+            st.success("Payment successful! Your plan has been upgraded.")
+        else:
+            st.warning("Could not verify payment. Please contact support if your plan was not updated.")
+    st.query_params.clear()
+
+# ---------------------------------------------------------------------------
 # Main app — only runs when authenticated
 # ---------------------------------------------------------------------------
 from utils.ui_components import render_header, render_sidebar

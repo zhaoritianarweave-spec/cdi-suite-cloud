@@ -159,9 +159,15 @@ def render_header():
 
 
 def render_sidebar():
-    """Render the sidebar with user info, model selector, and usage stats."""
+    """Render the sidebar with user info, plan, usage stats, and upgrade option."""
     from utils.auth import get_user, logout
-    from utils.usage import get_monthly_usage, FREE_MONTHLY_LIMIT
+    from utils.usage import get_monthly_usage, get_user_plan, get_plan_limit, PLAN_LIMITS
+    from utils.stripe_client import (
+        is_stripe_configured,
+        create_checkout_session,
+        create_customer_portal_url,
+        get_plan_name,
+    )
 
     user = get_user()
 
@@ -178,15 +184,69 @@ def render_sidebar():
 
         st.markdown("---")
 
-        # User info
+        # User info & usage
         if user:
-            st.markdown(f"**{user['email']}**")
+            plan = get_user_plan(user["id"])
+            plan_name = get_plan_name(plan)
+            limit = get_plan_limit(user["id"])
             used = get_monthly_usage(user["id"])
-            remaining = max(0, FREE_MONTHLY_LIMIT - used)
-            st.caption(f"Usage: {used} / {FREE_MONTHLY_LIMIT} this month")
-            st.progress(min(used / FREE_MONTHLY_LIMIT, 1.0))
-            if remaining == 0:
-                st.warning("Quota reached", icon="\U0001f512")
+            remaining = max(0, limit - used)
+
+            st.markdown(f"[{user['email']}](mailto:{user['email']})")
+
+            # Plan badge
+            badge_color = {"free": "#8B949E", "pro": "#0A7CFF", "enterprise": "#00D4AA"}.get(plan, "#8B949E")
+            st.markdown(
+                f"<span style='background:{badge_color}22;color:{badge_color};"
+                f"padding:2px 10px;border-radius:10px;font-size:0.75rem;"
+                f"font-weight:600;border:1px solid {badge_color}44;'>"
+                f"{plan_name} Plan</span>",
+                unsafe_allow_html=True,
+            )
+
+            # Usage display
+            display_limit = limit if limit < 999999 else "\u221e"
+            st.caption(f"Usage: {used} / {display_limit} this month")
+            if limit < 999999:
+                st.progress(min(used / limit, 1.0))
+
+            if remaining == 0 and plan == "free":
+                st.warning("Free quota reached", icon="\U0001f512")
+
+            # Upgrade / Manage buttons
+            if is_stripe_configured():
+                if plan == "free":
+                    billing = st.radio(
+                        "Billing",
+                        ["Monthly — A$99/mo", "Annual — A$69/mo (save 30%)"],
+                        index=1,
+                        key="billing_interval",
+                        label_visibility="collapsed",
+                    )
+                    interval = "annual" if "Annual" in billing else "monthly"
+                    price_label = "A$69/mo" if interval == "annual" else "A$99/mo"
+
+                    if st.button(f"\u26a1 Upgrade to Pro — {price_label}", use_container_width=True, type="primary"):
+                        url = create_checkout_session(user["id"], user["email"], "pro", interval)
+                        if url:
+                            st.markdown(
+                                f'<meta http-equiv="refresh" content="0;url={url}">',
+                                unsafe_allow_html=True,
+                            )
+                            st.info("Redirecting to checkout...")
+                            st.stop()
+                else:
+                    portal_url = create_customer_portal_url(user["id"])
+                    if portal_url:
+                        st.markdown(
+                            f"<a href='{portal_url}' target='_blank' style='"
+                            f"display:block;text-align:center;padding:8px;border-radius:6px;"
+                            f"border:1px solid #30363D;color:#E6EDF3;text-decoration:none;"
+                            f"font-size:0.85rem;'>Manage Subscription</a>",
+                            unsafe_allow_html=True,
+                        )
+
+            st.markdown("")
             if st.button("Log Out", use_container_width=True):
                 logout()
                 st.rerun()
