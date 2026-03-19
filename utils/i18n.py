@@ -253,6 +253,14 @@ TRANSLATIONS = {
     "severity_high": {"en": "HIGH RISK", "zh": "高风险"},
     "severity_medium": {"en": "MEDIUM", "zh": "中等"},
     "severity_low": {"en": "LOW", "zh": "低风险"},
+    # ── Admin Panel ──
+    "tab_admin": {"en": "Admin", "zh": "管理"},
+    "admin_title": {"en": "User Management", "zh": "用户管理"},
+    "admin_no_key": {"en": "Service role key not configured. Add SUPABASE_SERVICE_ROLE_KEY to secrets.", "zh": "未配置 service role 密钥，请在 secrets 中添加 SUPABASE_SERVICE_ROLE_KEY。"},
+    "admin_no_users": {"en": "No registered users found.", "zh": "暂无注册用户。"},
+    "admin_stats": {"en": "Total users: {total} · Pro users: {pro}", "zh": "总用户: {total} · Pro 用户: {pro}"},
+    "admin_upgrade": {"en": "⬆️ Upgrade Pro", "zh": "⬆️ 升级 Pro"},
+    "admin_downgrade": {"en": "⬇️ Downgrade", "zh": "⬇️ 降级"},
     # ── Shared ──
     "generation_failed": {"en": "Generation failed. Please adjust parameters and retry.", "zh": "生成失败，请调整参数后重试。"},
     "complete_label": {"en": "✓ COMPLETE | All renderings delivered", "zh": "✓ 完成 | 所有渲染图已交付"},

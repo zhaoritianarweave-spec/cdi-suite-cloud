@@ -46,17 +46,30 @@ from tabs import tab1_site_design, tab2_drawing_analyser, tab4_contract_guard
 render_sidebar()
 render_header()
 
-tab1, tab2, tab3 = st.tabs([
+# Check if current user is admin
+_user = get_user()
+_is_admin = _user and _user.get("email") == "hsy8260@proton.me"
+
+tab_names = [
     t("tab_site_renderer"),
     t("tab_drawing_analyser"),
     t("tab_contract_guard"),
-])
+]
+if _is_admin:
+    tab_names.append(t("tab_admin"))
 
-with tab1:
+tabs = st.tabs(tab_names)
+
+with tabs[0]:
     tab1_site_design.render()
 
-with tab2:
+with tabs[1]:
     tab2_drawing_analyser.render()
 
-with tab3:
+with tabs[2]:
     tab4_contract_guard.render()
+
+if _is_admin:
+    with tabs[3]:
+        from tabs import tab_admin
+        tab_admin.render()
