@@ -313,6 +313,16 @@ def render():
             # Record usage only after successful analysis
             if _user:
                 record_usage(_user["id"], "drawing_analyser", gemini_client.get_model_id())
+                # Save to history
+                try:
+                    from utils.history import save_history
+                    save_history(
+                        _user["id"], "drawing_analyser",
+                        f"Drawing Analysis — {', '.join(focus_keys)}",
+                        result_text[:500],
+                    )
+                except Exception:
+                    pass
                 st.rerun()
         else:
             progress_container.empty()

@@ -255,6 +255,30 @@ def render_sidebar():
                             unsafe_allow_html=True,
                         )
 
+            # History section
+            st.markdown("---")
+            from utils.history import get_history
+            history = get_history(user["id"], limit=10)
+            if history:
+                history_label = "📋 History" if t("log_in") != "登录" else "📋 历史记录"
+                with st.expander(history_label, expanded=False):
+                    tab_icons = {
+                        "site_renderer": "🖼️",
+                        "drawing_analyser": "📐",
+                        "contract_guard": "📜",
+                    }
+                    for h in history:
+                        icon = tab_icons.get(h["tab"], "📄")
+                        date = h["created_at"][:10] if h.get("created_at") else ""
+                        title = h.get("title", "Analysis")
+                        st.markdown(
+                            f"<div style='padding:4px 0;border-bottom:1px solid #21262D;'>"
+                            f"<span style='font-size:0.8rem;'>{icon} {title}</span><br>"
+                            f"<span style='color:#8B949E;font-size:0.7rem;'>{date}</span>"
+                            f"</div>",
+                            unsafe_allow_html=True,
+                        )
+
             st.markdown("")
             if st.button(t("log_out"), use_container_width=True):
                 logout()

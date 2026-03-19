@@ -531,6 +531,17 @@ def render():
             # Record usage only after successful generation
             if _user:
                 record_usage(_user["id"], "site_renderer", "image-gen")
+                # Save to history
+                try:
+                    from utils.history import save_history
+                    view_names = [r.get("view_name", "View") for r in results]
+                    save_history(
+                        _user["id"], "site_renderer",
+                        f"{st.session_state.get('tab1_project_type', 'Design')} — {st.session_state.get('tab1_style', 'Modern')}",
+                        f"Generated {len(results)} renderings: {', '.join(view_names)}",
+                    )
+                except Exception:
+                    pass
                 st.rerun()
         else:
             st.error(t("generation_failed"))

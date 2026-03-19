@@ -632,6 +632,19 @@ def render():
             # Record usage only after successful analysis
             if _user:
                 record_usage(_user["id"], "contract_guard", gemini_client.get_model_id())
+                # Save to history
+                try:
+                    from utils.history import save_history
+                    risk_level = result.get("summary", {}).get("overallRiskLevel", "unknown")
+                    findings_count = len(result.get("findings", []))
+                    save_history(
+                        _user["id"], "contract_guard",
+                        f"Contract Analysis — {risk_level.upper()} risk",
+                        f"Found {findings_count} findings. Overall risk: {risk_level}",
+                        result,
+                    )
+                except Exception:
+                    pass
                 st.rerun()
         else:
             progress_container.empty()
