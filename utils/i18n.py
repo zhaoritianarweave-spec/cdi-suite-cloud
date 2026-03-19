@@ -5,26 +5,26 @@ import streamlit as st
 TRANSLATIONS = {
     # ── Landing page hero ──
     "hero_title": {"en": "CIVIL DESIGN INTELLIGENCE", "zh": "土木设计智能平台"},
-    "hero_subtitle": {"en": "AI-Powered Platform for Architecture & Engineering", "zh": "AI 驱动的建筑与工程设计平台"},
+    "hero_subtitle": {"en": "Intelligent Design Platform for Architecture & Engineering", "zh": "建筑与工程智能设计平台"},
     "hero_caption": {
-        "en": "Generate photorealistic renderings · Analyse construction drawings · Review contracts in seconds",
-        "zh": "生成真实感渲染图 · 分析施工图纸 · 秒级合同审查",
+        "en": "Photorealistic renderings · Construction drawing analysis · Contract risk review — powered by Australian Standards & NCC",
+        "zh": "真实感渲染 · 施工图纸分析 · 合同风险审查 — 基于澳大利亚标准与 NCC 规范",
     },
     # ── Landing feature cards ──
     "feat_renderer_title": {"en": "Site Renderer", "zh": "场地渲染器"},
     "feat_renderer_desc": {
-        "en": "Upload a site photo, get multi-angle photorealistic renderings with design consistency.",
-        "zh": "上传场地照片，获取多角度真实感渲染图，设计风格一致。",
+        "en": "Upload a site photo, generate multi-angle photorealistic renderings with intelligent design consistency.",
+        "zh": "上传场地照片，智能生成多角度真实感渲染图，风格统一协调。",
     },
     "feat_analyser_title": {"en": "Drawing Analyser", "zh": "图纸分析器"},
     "feat_analyser_desc": {
-        "en": "AI-driven quantity takeoff, compliance checks and drawing comparison analysis.",
-        "zh": "AI 驱动的工程量提取、合规检查和图纸对比分析。",
+        "en": "Intelligent quantity takeoff, BCA/AS compliance checks and drawing discrepancy detection.",
+        "zh": "智能工程量提取、BCA/AS 合规检查与图纸差异检测。",
     },
     "feat_contract_title": {"en": "ContractGuard", "zh": "合同卫士"},
     "feat_contract_desc": {
-        "en": "Instant contract risk analysis aligned with Australian Standards & NCC.",
-        "zh": "即时合同风险分析，对标澳大利亚标准和 NCC。",
+        "en": "Contract risk analysis benchmarked against Australian Standards, NCC & Security of Payment Act.",
+        "zh": "基于澳大利亚标准、NCC 与支付安全法的合同风险分析。",
     },
     "pricing_badge": {
         "en": "Currently in Beta — Free to try",

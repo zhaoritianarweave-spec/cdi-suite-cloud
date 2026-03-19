@@ -6,6 +6,17 @@ from utils.i18n import t, t_fmt
 # ---------------------------------------------------------------------------
 GLOBAL_CSS = """
 <style>
+/* --- Premium fonts --- */
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&family=Noto+Sans+SC:wght@400;500;700&family=Space+Grotesk:wght@400;500;600;700&display=swap');
+
+html, body, [data-testid="stAppViewContainer"], [data-testid="stSidebar"] {
+    font-family: 'Plus Jakarta Sans', 'Noto Sans SC', -apple-system, BlinkMacSystemFont, sans-serif !important;
+}
+h1, h2, h3, h4, h5, h6 {
+    font-family: 'Space Grotesk', 'Noto Sans SC', sans-serif !important;
+    letter-spacing: 0.3px;
+}
+
 /* --- Blueprint grid overlay on main area --- */
 [data-testid="stMainBlockContainer"] {
     background-image:
@@ -281,10 +292,11 @@ def inject_css():
 
 
 def render_header():
-    """Render a welcome dashboard header with user greeting and usage card."""
+    """Render a compact greeting bar — the 3 feature cards are shown inside each tab."""
     from utils.auth import get_user
     from utils.usage import get_monthly_usage, get_user_plan, get_plan_limit
     from utils.stripe_client import get_plan_name
+    import datetime
 
     user = get_user()
     if not user:
@@ -298,82 +310,34 @@ def render_header():
     pct = min(used / limit, 1.0) if limit < 999999 else 0
     pct_int = int(pct * 100)
 
-    # Greeting based on time
-    import datetime
     hour = datetime.datetime.now().hour
     if hour < 12:
-        greeting_en, greeting_zh = "Good morning", "早上好"
+        greeting = "早上好" if t("log_in") == "登录" else "Good morning"
     elif hour < 18:
-        greeting_en, greeting_zh = "Good afternoon", "下午好"
+        greeting = "下午好" if t("log_in") == "登录" else "Good afternoon"
     else:
-        greeting_en, greeting_zh = "Good evening", "晚上好"
-    greeting = greeting_zh if t("log_in") == "登录" else greeting_en
+        greeting = "晚上好" if t("log_in") == "登录" else "Good evening"
 
     email_name = user["email"].split("@")[0]
-
-    badge_color = {"free": "#8B949E", "pro": "#0A7CFF", "enterprise": "#00D4AA"}.get(plan, "#8B949E")
+    usage_label = "本月用量" if t("log_in") == "登录" else "USAGE"
 
     st.markdown(
         f"""
-        <div style="
-            background: linear-gradient(135deg, #0D1117 0%, #161B22 50%, #1A1F2B 100%);
-            border: 1px solid rgba(10,124,255,0.15);
-            border-radius: 16px;
-            padding: 1.8rem 2rem;
-            margin-bottom: 1.5rem;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            flex-wrap: wrap;
-            gap: 1rem;
-        ">
-            <div>
-                <h2 style="margin:0 0 0.3rem 0; font-size:1.5rem; color:#E6EDF3;">
-                    {greeting}, {email_name} 👋
-                </h2>
-                <p style="margin:0; color:#8B949E; font-size:0.9rem;">
-                    {t("header_subtitle")}
-                </p>
-                <div style="margin-top:0.5rem;">
-                    <span style="background:{badge_color}22; color:{badge_color};
-                        padding:3px 12px; border-radius:12px; font-size:0.75rem;
-                        font-weight:600; border:1px solid {badge_color}44;">
-                        {plan_name} Plan
-                    </span>
-                    <span style="background:rgba(10,124,255,0.08); color:#58A6FF;
-                        padding:3px 12px; border-radius:12px; font-size:0.75rem;
-                        font-weight:600; border:1px solid rgba(10,124,255,0.2); margin-left:6px;">
-                        {t("header_badge")}
-                    </span>
-                </div>
+        <div style="display:flex; justify-content:space-between; align-items:center;
+            padding:0.6rem 0; margin-bottom:0.5rem;">
+            <div style="font-size:1.1rem; color:#E6EDF3; font-weight:600;">
+                {greeting}, {email_name} 👋
             </div>
-            <div style="
-                background: rgba(10,124,255,0.06);
-                border: 1px solid rgba(10,124,255,0.15);
-                border-radius: 12px;
-                padding: 1rem 1.5rem;
-                min-width: 200px;
-                text-align: center;
-            ">
-                <div style="font-size:0.75rem; color:#8B949E; margin-bottom:0.4rem; letter-spacing:0.5px;">
-                    {"本月用量" if t("log_in") == "登录" else "MONTHLY USAGE"}
-                </div>
-                <div style="font-size:1.8rem; font-weight:700; color:#E6EDF3; line-height:1;">
-                    {used}<span style="font-size:1rem; color:#8B949E;">/{display_limit}</span>
-                </div>
-                <div style="
-                    margin-top:0.5rem;
-                    height:6px;
-                    background:rgba(255,255,255,0.06);
-                    border-radius:3px;
-                    overflow:hidden;
-                ">
-                    <div style="
-                        width:{pct_int}%;
-                        height:100%;
+            <div style="display:flex; align-items:center; gap:12px;">
+                <span style="color:#8B949E; font-size:0.8rem;">{usage_label}</span>
+                <span style="font-size:1rem; font-weight:700; color:#E6EDF3;">
+                    {used}<span style="color:#8B949E; font-weight:400;">/{display_limit}</span>
+                </span>
+                <div style="width:80px; height:6px; background:rgba(255,255,255,0.06);
+                    border-radius:3px; overflow:hidden;">
+                    <div style="width:{pct_int}%; height:100%;
                         background:linear-gradient(90deg,#0A7CFF,#00D4AA);
-                        border-radius:3px;
-                    "></div>
+                        border-radius:3px;"></div>
                 </div>
             </div>
         </div>
