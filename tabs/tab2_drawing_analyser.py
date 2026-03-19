@@ -418,7 +418,7 @@ def render():
 
         # --- Downloads ---
         st.markdown("---")
-        dl_cols = st.columns(2)
+        dl_cols = st.columns(3)
         with dl_cols[0]:
             st.download_button(
                 label=t("t2_download_report"),
@@ -438,6 +438,18 @@ def render():
                     file_name="quantity_takeoff.csv",
                     mime="text/csv",
                     key="dl_tab2_csv",
+                    use_container_width=True,
+                )
+        with dl_cols[2]:
+            # Excel export of QTO
+            excel_data = _generate_qto_excel(result_text)
+            if excel_data:
+                st.download_button(
+                    label="📊 Excel (.xlsx)",
+                    data=excel_data,
+                    file_name="quantity_takeoff.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    key="dl_tab2_xlsx",
                     use_container_width=True,
                 )
 
@@ -491,3 +503,72 @@ def _extract_qto_csv(text: str) -> str | None:
         return None
 
     return "\n".join(csv_lines)
+
+
+def _generate_qto_excel(text: str) -> bytes | None:
+    """Generate an Excel file from the QTO section."""
+    try:
+        from io import BytesIO
+        from openpyxl import Workbook
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+
+        sections = _parse_sections(text)
+        qto = sections.get("QUANTITY TAKE-OFF", "")
+        if not qto:
+            return None
+
+        # Parse table rows
+        rows = []
+        for line in qto.split("\n"):
+            stripped = line.strip()
+            if stripped.startswith("|") and stripped.endswith("|"):
+                cells = [c.strip() for c in stripped.split("|")[1:-1]]
+                if cells and not all(set(c) <= {"-", ":", " "} for c in cells):
+                    rows.append(cells)
+
+        if len(rows) <= 1:
+            return None
+
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Quantity Take-Off"
+
+        # Styles
+        header_font = Font(bold=True, color="FFFFFF", size=11)
+        header_fill = PatternFill(start_color="0A7CFF", end_color="0A7CFF", fill_type="solid")
+        border = Border(
+            left=Side(style="thin", color="D0D0D0"),
+            right=Side(style="thin", color="D0D0D0"),
+            top=Side(style="thin", color="D0D0D0"),
+            bottom=Side(style="thin", color="D0D0D0"),
+        )
+
+        # Write header
+        for col, val in enumerate(rows[0], 1):
+            cell = ws.cell(row=1, column=col, value=val)
+            cell.font = header_font
+            cell.fill = header_fill
+            cell.alignment = Alignment(horizontal="center")
+            cell.border = border
+
+        # Write data
+        for row_idx, row_data in enumerate(rows[1:], 2):
+            for col, val in enumerate(row_data, 1):
+                cell = ws.cell(row=row_idx, column=col, value=val)
+                cell.border = border
+
+        # Auto-fit column widths
+        for col in ws.columns:
+            max_len = max(len(str(cell.value or "")) for cell in col)
+            ws.column_dimensions[col[0].column_letter].width = min(max_len + 4, 40)
+
+        # Title row above table
+        ws.insert_rows(1)
+        title_cell = ws.cell(row=1, column=1, value="CDI Suite — Quantity Take-Off Report")
+        title_cell.font = Font(bold=True, size=14, color="0A7CFF")
+
+        buf = BytesIO()
+        wb.save(buf)
+        return buf.getvalue()
+    except Exception:
+        return None

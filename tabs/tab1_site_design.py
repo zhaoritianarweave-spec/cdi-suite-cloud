@@ -574,6 +574,26 @@ def render():
                     key=f"dl_{i}",
                 )
 
+        # --- Download All as ZIP ---
+        if len(results) > 1:
+            try:
+                import io, zipfile
+                zip_buf = io.BytesIO()
+                with zipfile.ZipFile(zip_buf, "w") as zf:
+                    for i, r in enumerate(results):
+                        name = r.get("view_name", f"view_{i+1}").replace(" ", "_").replace("/", "_").lower()
+                        zf.writestr(f"design_{name}.png", r["image_bytes"])
+                st.download_button(
+                    label="📦 Download All (.zip)" if t("log_in") != "登录" else "📦 打包下载全部",
+                    data=zip_buf.getvalue(),
+                    file_name="cdi_renderings.zip",
+                    mime="application/zip",
+                    key="dl_all_zip",
+                    use_container_width=True,
+                )
+            except Exception:
+                pass
+
         # --- Flyover Video Generation --------------------------------
         _render_video_section()
 

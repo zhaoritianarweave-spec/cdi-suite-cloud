@@ -5,3 +5,4 @@ stripe>=8.0.0
 Pillow
 python-docx
 pypdf
+openpyxl
