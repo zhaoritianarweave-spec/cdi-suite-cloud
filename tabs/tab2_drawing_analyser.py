@@ -108,7 +108,7 @@ Use status: ✅ Pass, ⚠️ Flag, ❌ Fail
 
     focus_desc = ", ".join(focus_keys)
 
-    return f"""You are a senior civil drafter and quantity surveyor at an Australian consulting engineering firm with extensive industry experience. Analyse this construction drawing in detail.
+    return f"""You are a senior civil drafter and quantity surveyor at a leading Australian consulting engineering firm. Analyse this construction drawing in detail.
 
 First identify the drawing type (e.g. Site Plan, Floor Plan, Structural Plan, Elevation, Section, Services, Landscape, etc.) from the drawing content.
 Analysis Required: {focus_desc}
