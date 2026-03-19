@@ -80,16 +80,20 @@ def _get_feedback_stats(admin_client):
 def _set_user_plan(admin_client, user_id: str, plan: str):
     """Upsert subscription for a user."""
     try:
-        period_end = "2026-12-31T00:00:00Z"
-        admin_client.table("subscriptions").upsert(
-            {
-                "user_id": user_id,
-                "plan": plan,
-                "status": "active" if plan != "free" else "free",
-                "current_period_end": period_end,
-            },
-            on_conflict="user_id",
-        ).execute()
+        if plan == "free":
+            # Downgrade: delete the subscription row so user falls back to free
+            admin_client.table("subscriptions").delete().eq("user_id", user_id).execute()
+        else:
+            period_end = "2026-12-31T00:00:00Z"
+            admin_client.table("subscriptions").upsert(
+                {
+                    "user_id": user_id,
+                    "plan": plan,
+                    "status": "active",
+                    "current_period_end": period_end,
+                },
+                on_conflict="user_id",
+            ).execute()
         # Clear cached plan
         st.session_state.pop(f"_plan_{user_id}", None)
         return True
