@@ -153,10 +153,9 @@ APP_URL = "your-app-url"
 - Streamlit Cloud App URL 改短：如 `cdi-suite.streamlit.app`
 - 或购买域名（如 `cdisuite.com.au`）绑定
 
-#### 4.7 Tab2 图纸分析优化
-**已知问题**：
-- [ ] 分析语句中 "90年职业生涯" 表述不当，需优化 prompt 措辞
-- [ ] 删除图纸类型选择控件（Drawing Type selector）
+#### 4.7 Tab2 图纸分析优化 ✅ DONE
+- [x] 分析语句中 "90年职业生涯" 表述不当 → 已修改为 "leading Australian consulting engineering firm"
+- [x] 删除图纸类型选择控件（Drawing Type selector）→ 已在之前版本删除
 
 ---
 
