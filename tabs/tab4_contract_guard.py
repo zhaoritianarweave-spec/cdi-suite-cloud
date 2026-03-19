@@ -619,7 +619,7 @@ def render():
             _render_progress(progress_container, status_text, pct, msg)
             time.sleep(0.4)
 
-        _render_progress(progress_container, status_text, 65, "Waiting for Generative Architecture Engine response...")
+        _render_progress(progress_container, status_text, 65, "Waiting for Civil Intelligence Large Model response...")
 
         result = _analyse_contract(doc_data)
 

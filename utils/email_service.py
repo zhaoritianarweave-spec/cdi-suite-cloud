@@ -84,7 +84,7 @@ def send_welcome_email(email: str) -> bool:
 
         <hr style="border:none;border-top:1px solid #30363D;margin:1.5rem 0;">
         <p style="color:#484F58;font-size:0.75rem;text-align:center;">
-            CDI Suite v1.0 · Powered by Generative Architecture Engine
+            CDI Suite v1.0 · Powered by Civil Intelligence Large Model
         </p>
     </div>
     """
@@ -125,7 +125,7 @@ def send_usage_warning_email(email: str, used: int, limit: int) -> bool:
 
         <hr style="border:none;border-top:1px solid #30363D;margin:1.5rem 0;">
         <p style="color:#484F58;font-size:0.75rem;text-align:center;">
-            CDI Suite v1.0 · Powered by Generative Architecture Engine
+            CDI Suite v1.0 · Powered by Civil Intelligence Large Model
         </p>
     </div>
     """

@@ -294,7 +294,7 @@ def render():
             _render_progress(pct, msg)
             time.sleep(0.5)
 
-        _render_progress(65, "Waiting for Generative Architecture Engine response...")
+        _render_progress(65, "Waiting for Civil Intelligence Large Model response...")
 
         # API call
         result_text = gemini_client.analyse_image(
