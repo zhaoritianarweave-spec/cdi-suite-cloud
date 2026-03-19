@@ -1,4 +1,5 @@
 import streamlit as st
+from pathlib import Path
 
 st.set_page_config(
     page_title="CDI Suite — Civil Design Intelligence",
@@ -30,7 +31,6 @@ if _params.get("payment") == "success" and _params.get("session_id"):
     if _current_user:
         from utils.stripe_client import handle_checkout_success
         if handle_checkout_success(_params["session_id"], _current_user["id"]):
-            # Clear cached plan so sidebar shows updated info
             st.session_state.pop(f"_plan_{_current_user['id']}", None)
             st.success(t("payment_success"))
         else:
@@ -46,30 +46,72 @@ from tabs import tab1_site_design, tab2_drawing_analyser, tab4_contract_guard
 render_sidebar()
 render_header()
 
-# Check if current user is admin
+_ASSETS_UI = Path(__file__).resolve().parent / "assets" / "ui"
+
+# Check if current user is admin — admin goes in sidebar
 _user = get_user()
 _is_admin = _user and _user.get("email") == "hsy8260@proton.me"
 
-tab_names = [
-    t("tab_site_renderer"),
-    t("tab_drawing_analyser"),
-    t("tab_contract_guard"),
+# ---------------------------------------------------------------------------
+# 3 feature cards + workspace below
+# ---------------------------------------------------------------------------
+_MODULES = [
+    ("site_renderer", "feat_renderer_title", "feat_renderer_desc", "site_renderer.png"),
+    ("drawing_analyser", "feat_analyser_title", "feat_analyser_desc", "drawing_analyser.png"),
+    ("contract_guard", "feat_contract_title", "feat_contract_desc", "contract_guard.png"),
 ]
-if _is_admin:
-    tab_names.append(t("tab_admin"))
 
-tabs = st.tabs(tab_names)
+# Default to first module
+if "active_module" not in st.session_state:
+    st.session_state["active_module"] = "site_renderer"
 
-with tabs[0]:
+active = st.session_state["active_module"]
+
+# ── Feature cards row ──
+cols = st.columns(3, gap="medium")
+for col, (key, title_key, desc_key, img_file) in zip(cols, _MODULES):
+    with col:
+        is_active = (key == active)
+        border_color = "#0A7CFF" if is_active else "rgba(48,54,61,0.6)"
+        bg = "rgba(10,124,255,0.06)" if is_active else "transparent"
+
+        img_path = _ASSETS_UI / img_file
+        if img_path.exists():
+            st.image(str(img_path), use_container_width=True)
+
+        st.markdown(
+            f"<div style='text-align:center; padding:0.3rem 0;'>"
+            f"<h4 style='color:{'#58A6FF' if is_active else '#8B949E'}; "
+            f"margin:0 0 0.3rem 0; font-size:0.95rem; font-weight:600;'>{t(title_key)}</h4>"
+            f"<p style='color:#8B949E; font-size:0.8rem; line-height:1.4; "
+            f"min-height:2.5rem;'>{t(desc_key)}</p></div>",
+            unsafe_allow_html=True,
+        )
+
+        if st.button(
+            t(title_key),
+            key=f"btn_{key}",
+            use_container_width=True,
+            type="primary" if is_active else "secondary",
+        ):
+            st.session_state["active_module"] = key
+            st.rerun()
+
+st.markdown("---")
+
+# ── Workspace ──
+if active == "site_renderer":
     tab1_site_design.render()
-
-with tabs[1]:
+elif active == "drawing_analyser":
     tab2_drawing_analyser.render()
-
-with tabs[2]:
+elif active == "contract_guard":
     tab4_contract_guard.render()
 
+# ---------------------------------------------------------------------------
+# Admin panel in sidebar (admin only)
+# ---------------------------------------------------------------------------
 if _is_admin:
-    with tabs[3]:
-        from tabs import tab_admin
-        tab_admin.render()
+    with st.sidebar:
+        with st.expander(f"⚙️ {t('tab_admin')}", expanded=False):
+            from tabs import tab_admin
+            tab_admin.render()

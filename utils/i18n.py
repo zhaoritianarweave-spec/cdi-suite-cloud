@@ -5,26 +5,26 @@ import streamlit as st
 TRANSLATIONS = {
     # ── Landing page hero ──
     "hero_title": {"en": "CIVIL DESIGN INTELLIGENCE", "zh": "土木设计智能平台"},
-    "hero_subtitle": {"en": "Intelligent Design Platform for Architecture & Engineering", "zh": "建筑与工程智能设计平台"},
+    "hero_subtitle": {"en": "Powered by Civil Intelligence Large Model, based on Australian laws and regulations", "zh": "由土木智能大模型驱动，依据澳洲法律法规"},
     "hero_caption": {
-        "en": "Photorealistic renderings · Construction drawing analysis · Contract risk review — powered by Australian Standards & NCC",
-        "zh": "真实感渲染 · 施工图纸分析 · 合同风险审查 — 基于澳大利亚标准与 NCC 规范",
+        "en": "Photorealistic renderings · Construction drawing analysis · Contract risk review — powered by Civil Intelligence Large Model",
+        "zh": "真实感渲染 · 施工图纸分析 · 合同风险审查 — 由土木智能大模型驱动",
     },
     # ── Landing feature cards ──
     "feat_renderer_title": {"en": "Site Renderer", "zh": "场地渲染器"},
     "feat_renderer_desc": {
-        "en": "Upload a site photo, generate multi-angle photorealistic renderings with intelligent design consistency.",
-        "zh": "上传场地照片，智能生成多角度真实感渲染图，风格统一协调。",
+        "en": "Upload a site photo, generate multi-angle photorealistic renderings with design consistency.",
+        "zh": "上传场地照片，生成多角度真实感渲染图，风格统一协调。",
     },
     "feat_analyser_title": {"en": "Drawing Analyser", "zh": "图纸分析器"},
     "feat_analyser_desc": {
-        "en": "Intelligent quantity takeoff, BCA/AS compliance checks and drawing discrepancy detection.",
-        "zh": "智能工程量提取、BCA/AS 合规检查与图纸差异检测。",
+        "en": "Quantity takeoff, BCA/AS compliance checks and drawing discrepancy detection, based on Australian laws and regulations.",
+        "zh": "工程量提取、BCA/AS 合规检查与图纸差异检测，依据澳洲法律法规。",
     },
     "feat_contract_title": {"en": "ContractGuard", "zh": "合同卫士"},
     "feat_contract_desc": {
-        "en": "Contract risk analysis benchmarked against Australian Standards, NCC & Security of Payment Act.",
-        "zh": "基于澳大利亚标准、NCC 与支付安全法的合同风险分析。",
+        "en": "Contract risk analysis based on Australian laws, regulations, NCC & Security of Payment Act.",
+        "zh": "基于澳洲法律法规、NCC 与支付安全法的合同风险分析。",
     },
     "pricing_badge": {
         "en": "Currently in Beta — Free to try",
@@ -56,18 +56,18 @@ TRANSLATIONS = {
     "msg_reset_sent": {"en": "Password reset email sent! Check your inbox.", "zh": "密码重置邮件已发送，请查收！"},
     "err_enter_email": {"en": "Please enter your email.", "zh": "请输入邮箱。"},
     "auth_footer": {
-        "en": "CDI Suite v1.0 · Powered by Generative Architecture Engine",
-        "zh": "CDI Suite v1.0 · 由生成式建筑引擎驱动",
+        "en": "CDI Suite v1.0 · Powered by Civil Intelligence Large Model",
+        "zh": "CDI Suite v1.0 · 由土木智能大模型驱动",
     },
     # ── Header ──
     "header_title": {"en": "CIVIL DESIGN INTELLIGENCE", "zh": "土木设计智能"},
     "header_subtitle": {"en": "Architecture · Engineering · Visualisation", "zh": "建筑 · 工程 · 可视化"},
-    "header_badge": {"en": "POWERED BY GENERATIVE ARCHITECTURE ENGINE", "zh": "由生成式建筑引擎驱动"},
+    "header_badge": {"en": "POWERED BY CIVIL INTELLIGENCE LARGE MODEL", "zh": "由土木智能大模型驱动"},
     # ── Sidebar ──
     "sidebar_brand": {"en": "CDI SUITE", "zh": "CDI SUITE"},
     "sidebar_brand_sub": {"en": "Civil Design Intelligence", "zh": "土木设计智能"},
     "sidebar_footer_line1": {"en": "Civil Design Intelligence Suite v1.0", "zh": "Civil Design Intelligence Suite v1.0"},
-    "sidebar_footer_line2": {"en": "Generative Architecture Engine", "zh": "生成式建筑引擎"},
+    "sidebar_footer_line2": {"en": "Powered by Civil Intelligence Large Model", "zh": "由土木智能大模型驱动"},
     "plan_label": {"en": "{name} Plan", "zh": "{name} 计划"},
     "usage_label": {"en": "Usage: {used} / {limit} this month", "zh": "用量：本月 {used} / {limit}"},
     "free_quota_reached": {"en": "Free quota reached", "zh": "免费额度已用完"},
@@ -89,8 +89,8 @@ TRANSLATIONS = {
     # ── Tab1: Site Renderer ──
     "t1_title": {"en": "Site Intelligence Renderer", "zh": "场地智能渲染器"},
     "t1_caption": {
-        "en": "Upload a site photograph — the Generative Architecture Engine analyses existing conditions and produces multi-angle photorealistic renderings with design consistency across all viewpoints.",
-        "zh": "上传场地照片 — 生成式建筑引擎分析现有条件，生成多角度真实感渲染图，所有视角保持设计一致性。",
+        "en": "Upload a site photograph — Civil Intelligence Large Model analyses existing conditions and produces multi-angle photorealistic renderings with design consistency across all viewpoints.",
+        "zh": "上传场地照片 — 土木智能大模型分析现有条件，生成多角度真实感渲染图，所有视角保持设计一致性。",
     },
     "t1_site_photo": {"en": "Site Photograph", "zh": "场地照片"},
     "t1_upload": {"en": "Upload a site photo", "zh": "上传场地照片"},
@@ -113,8 +113,8 @@ TRANSLATIONS = {
     "t1_download": {"en": "Download {label}", "zh": "下载 {label}"},
     "t1_video_title": {"en": "Cinematic Flyover Video", "zh": "电影级飞越视频"},
     "t1_video_caption": {
-        "en": "Generate an 8-second cinematic fly-around video from the aerial rendering using the Generative Architecture Engine.",
-        "zh": "使用生成式建筑引擎从鸟瞰渲染图生成8秒电影级环绕飞越视频。",
+        "en": "Generate an 8-second cinematic fly-around video from the aerial rendering using Civil Intelligence Large Model.",
+        "zh": "使用土木智能大模型从鸟瞰渲染图生成8秒电影级环绕飞越视频。",
     },
     "t1_video_btn": {"en": "🎬 Generate Flyover Video", "zh": "🎬 生成飞越视频"},
     "t1_video_ready": {"en": "✓ VIDEO READY | Cinematic flyover delivered", "zh": "✓ 视频就绪 | 电影级飞越已交付"},
@@ -157,8 +157,8 @@ TRANSLATIONS = {
     # ── Tab2: Drawing Analyser ──
     "t2_title": {"en": "Drawing Intelligence & Quantity Take-Off", "zh": "图纸智能分析与工程量提取"},
     "t2_caption": {
-        "en": "Upload a construction drawing — the Generative Architecture Engine reads annotations, extracts quantities, detects discrepancies and checks compliance automatically.",
-        "zh": "上传施工图纸 — 生成式建筑引擎自动读取标注、提取工程量、检测差异并进行合规检查。",
+        "en": "Upload a construction drawing — Civil Intelligence Large Model reads annotations, extracts quantities, detects discrepancies and checks compliance based on Australian laws and regulations.",
+        "zh": "上传施工图纸 — 土木智能大模型自动读取标注、提取工程量、检测差异，依据澳洲法律法规进行合规检查。",
     },
     "t2_drawing": {"en": "Construction Drawing", "zh": "施工图纸"},
     "t2_upload": {"en": "Upload a drawing", "zh": "上传图纸"},
@@ -201,8 +201,8 @@ TRANSLATIONS = {
     # ── Tab4: ContractGuard ──
     "t4_title": {"en": "ContractGuard — Clause Risk Analyser", "zh": "合同卫士 — 条款风险分析器"},
     "t4_caption": {
-        "en": "Upload a construction contract — the Generative Architecture Engine checks Australian legislation compliance, identifies unfair terms, benchmarks financial provisions and generates a comprehensive risk report.",
-        "zh": "上传施工合同 — 生成式建筑引擎检查澳大利亚法规合规性、识别不公平条款、对标财务条款并生成综合风险报告。",
+        "en": "Upload a construction contract — Civil Intelligence Large Model checks Australian legislation compliance, identifies unfair terms, benchmarks financial provisions and generates a comprehensive risk report.",
+        "zh": "上传施工合同 — 土木智能大模型检查澳洲法律法规合规性、识别不公平条款、对标财务条款并生成综合风险报告。",
     },
     "t4_documents": {"en": "Contract Documents", "zh": "合同文件"},
     "t4_upload": {"en": "Upload contract documents", "zh": "上传合同文件"},

@@ -292,34 +292,33 @@ def inject_css():
 
 
 def render_header():
-    """Render a compact greeting bar — the 3 feature cards are shown inside each tab."""
+    """Render a compact greeting bar with date on the right."""
     from utils.auth import get_user
-    from utils.usage import get_monthly_usage, get_user_plan, get_plan_limit
-    from utils.stripe_client import get_plan_name
     import datetime
 
     user = get_user()
     if not user:
         return
 
-    plan = get_user_plan(user["id"])
-    plan_name = get_plan_name(plan)
-    limit = get_plan_limit(user["id"])
-    used = get_monthly_usage(user["id"])
-    display_limit = str(limit) if limit < 999999 else "∞"
-    pct = min(used / limit, 1.0) if limit < 999999 else 0
-    pct_int = int(pct * 100)
+    is_zh = t("log_in") == "登录"
+    now = datetime.datetime.now()
+    hour = now.hour
 
-    hour = datetime.datetime.now().hour
     if hour < 12:
-        greeting = "早上好" if t("log_in") == "登录" else "Good morning"
+        greeting = "早上好" if is_zh else "Good morning"
     elif hour < 18:
-        greeting = "下午好" if t("log_in") == "登录" else "Good afternoon"
+        greeting = "下午好" if is_zh else "Good afternoon"
     else:
-        greeting = "晚上好" if t("log_in") == "登录" else "Good evening"
+        greeting = "晚上好" if is_zh else "Good evening"
 
     email_name = user["email"].split("@")[0]
-    usage_label = "本月用量" if t("log_in") == "登录" else "USAGE"
+
+    # Date display
+    if is_zh:
+        weekdays = ["周一", "周二", "周三", "周四", "周五", "周六", "周日"]
+        date_str = f"{now.month}月{now.day}日 {weekdays[now.weekday()]}"
+    else:
+        date_str = now.strftime("%b %d, %A")
 
     st.markdown(
         f"""
@@ -328,17 +327,10 @@ def render_header():
             <div style="font-size:1.1rem; color:#E6EDF3; font-weight:600;">
                 {greeting}, {email_name} 👋
             </div>
-            <div style="display:flex; align-items:center; gap:12px;">
-                <span style="color:#8B949E; font-size:0.8rem;">{usage_label}</span>
-                <span style="font-size:1rem; font-weight:700; color:#E6EDF3;">
-                    {used}<span style="color:#8B949E; font-weight:400;">/{display_limit}</span>
-                </span>
-                <div style="width:80px; height:6px; background:rgba(255,255,255,0.06);
-                    border-radius:3px; overflow:hidden;">
-                    <div style="width:{pct_int}%; height:100%;
-                        background:linear-gradient(90deg,#0A7CFF,#00D4AA);
-                        border-radius:3px;"></div>
-                </div>
+            <div style="display:flex; align-items:center; gap:6px;
+                color:#8B949E; font-size:0.85rem;">
+                <span>🗓️</span>
+                <span>{date_str}</span>
             </div>
         </div>
         """,
@@ -404,7 +396,15 @@ def render_sidebar():
             display_limit = str(limit) if limit < 999999 else "\u221e"
             st.caption(t_fmt("usage_label", used=used, limit=display_limit))
             if limit < 999999:
-                st.progress(min(used / limit, 1.0))
+                _pct = int(min(used / limit, 1.0) * 100)
+                st.markdown(
+                    f"<div style='width:100%;height:8px;background:rgba(255,255,255,0.06);"
+                    f"border-radius:4px;overflow:hidden;margin:4px 0 8px 0;'>"
+                    f"<div style='width:{_pct}%;height:100%;"
+                    f"background:linear-gradient(90deg,#0A7CFF,#00D4AA);"
+                    f"border-radius:4px;'></div></div>",
+                    unsafe_allow_html=True,
+                )
 
             if remaining == 0 and plan == "free":
                 st.warning(t("free_quota_reached"), icon="\U0001f512")
