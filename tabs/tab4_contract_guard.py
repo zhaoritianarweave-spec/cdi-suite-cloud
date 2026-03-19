@@ -820,3 +820,7 @@ def render():
                 key="dl_tab4_json",
                 use_container_width=True,
             )
+
+        # --- Feedback ------------------------------------------------
+        from utils.feedback import render_feedback
+        render_feedback("contract_guard", "tab4_results")

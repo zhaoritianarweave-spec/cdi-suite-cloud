@@ -431,6 +431,10 @@ def render():
                     use_container_width=True,
                 )
 
+        # --- Feedback ------------------------------------------------
+        from utils.feedback import render_feedback
+        render_feedback("drawing_analyser", "tab2_results")
+
 
 # ---------------------------------------------------------------------------
 # Helpers

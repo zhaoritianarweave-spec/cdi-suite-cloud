@@ -565,3 +565,7 @@ def render():
 
         # --- Flyover Video Generation --------------------------------
         _render_video_section()
+
+        # --- Feedback ------------------------------------------------
+        from utils.feedback import render_feedback
+        render_feedback("site_renderer", "tab1_results")

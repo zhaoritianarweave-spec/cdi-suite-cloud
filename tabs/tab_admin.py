@@ -61,6 +61,22 @@ def _get_all_usage(admin_client):
         return {}
 
 
+def _get_feedback_stats(admin_client):
+    """Fetch feedback counts grouped by tab and rating."""
+    try:
+        res = admin_client.table("feedback").select("tab, rating").execute()
+        stats = {}
+        for row in (res.data or []):
+            tab = row["tab"]
+            rating = row["rating"]
+            if tab not in stats:
+                stats[tab] = {"up": 0, "down": 0}
+            stats[tab][rating] = stats[tab].get(rating, 0) + 1
+        return stats
+    except Exception:
+        return {}
+
+
 def _set_user_plan(admin_client, user_id: str, plan: str):
     """Upsert subscription for a user."""
     try:
@@ -101,6 +117,7 @@ def render():
     users = _get_all_users(admin_client)
     subs = _get_subscriptions(admin_client)
     usage = _get_all_usage(admin_client)
+    feedback_stats = _get_feedback_stats(admin_client)
 
     if not users:
         st.info(t("admin_no_users"))
@@ -110,6 +127,17 @@ def render():
     total = len(users)
     pro_count = sum(1 for s in subs.values() if s.get("plan") == "pro")
     st.markdown(f"**{t_fmt('admin_stats', total=total, pro=pro_count)}**")
+
+    # Feedback summary
+    if feedback_stats:
+        fb_cols = st.columns(len(feedback_stats))
+        for i, (tab_name, stats) in enumerate(feedback_stats.items()):
+            with fb_cols[i]:
+                up = stats.get("up", 0)
+                down = stats.get("down", 0)
+                total_fb = up + down
+                rate = f"{up / total_fb * 100:.0f}%" if total_fb > 0 else "—"
+                st.metric(tab_name, f"👍 {up}  👎 {down}", f"{rate} positive")
 
     st.markdown("---")
 
