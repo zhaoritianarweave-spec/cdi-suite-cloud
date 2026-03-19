@@ -69,6 +69,18 @@ def record_usage(user_id: str, tab: str, model: str = ""):
         }).execute()
         # Invalidate cached usage count
         st.session_state.pop(f"_usage_{user_id}", None)
+
+        # Check if we should send a usage warning email
+        try:
+            from utils.email_service import check_and_send_usage_warning
+            from utils.auth import get_user
+            user = get_user()
+            if user:
+                used = get_monthly_usage(user_id)
+                limit = get_plan_limit(user_id)
+                check_and_send_usage_warning(user_id, user["email"], used, limit)
+        except Exception:
+            pass
     except Exception:
         pass  # Don't block the user if logging fails
 

@@ -48,6 +48,12 @@ def _do_signup(email: str, password: str) -> bool:
         res = sb.auth.sign_up({"email": email, "password": password})
         if res.user and res.user.id:
             st.success(t("msg_account_created"))
+            # Send welcome email (non-blocking)
+            try:
+                from utils.email_service import send_welcome_email
+                send_welcome_email(email)
+            except Exception:
+                pass
             return True
         st.error("Signup failed. Please try again.")
         return False
