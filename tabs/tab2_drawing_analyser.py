@@ -144,8 +144,16 @@ def _get_demo_drawings() -> list[pathlib.Path]:
 # ---------------------------------------------------------------------------
 
 def render():
-    section_header("📐", t("t2_title"))
-    st.caption(t("t2_caption"))
+    import pathlib as _pl
+    _assets = _pl.Path(__file__).resolve().parent.parent / "assets" / "ui"
+    _img_col, _txt_col = st.columns([1, 4])
+    with _img_col:
+        _img_path = _assets / "drawing_analyser.png"
+        if _img_path.exists():
+            st.image(str(_img_path), width=120)
+    with _txt_col:
+        section_header("📐", t("t2_title"))
+        st.caption(t("t2_caption"))
     st.markdown("---")
 
     # --- Layout -------------------------------------------------

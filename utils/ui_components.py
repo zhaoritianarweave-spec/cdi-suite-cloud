@@ -281,13 +281,101 @@ def inject_css():
 
 
 def render_header():
-    """Render the hero banner."""
+    """Render a welcome dashboard header with user greeting and usage card."""
+    from utils.auth import get_user
+    from utils.usage import get_monthly_usage, get_user_plan, get_plan_limit
+    from utils.stripe_client import get_plan_name
+
+    user = get_user()
+    if not user:
+        return
+
+    plan = get_user_plan(user["id"])
+    plan_name = get_plan_name(plan)
+    limit = get_plan_limit(user["id"])
+    used = get_monthly_usage(user["id"])
+    display_limit = str(limit) if limit < 999999 else "∞"
+    pct = min(used / limit, 1.0) if limit < 999999 else 0
+    pct_int = int(pct * 100)
+
+    # Greeting based on time
+    import datetime
+    hour = datetime.datetime.now().hour
+    if hour < 12:
+        greeting_en, greeting_zh = "Good morning", "早上好"
+    elif hour < 18:
+        greeting_en, greeting_zh = "Good afternoon", "下午好"
+    else:
+        greeting_en, greeting_zh = "Good evening", "晚上好"
+    greeting = greeting_zh if t("log_in") == "登录" else greeting_en
+
+    email_name = user["email"].split("@")[0]
+
+    badge_color = {"free": "#8B949E", "pro": "#0A7CFF", "enterprise": "#00D4AA"}.get(plan, "#8B949E")
+
     st.markdown(
         f"""
-        <div class="hero-banner">
-            <h1>{t("header_title")}</h1>
-            <div class="subtitle">{t("header_subtitle")}</div>
-            <div class="tech-badge">{t("header_badge")}</div>
+        <div style="
+            background: linear-gradient(135deg, #0D1117 0%, #161B22 50%, #1A1F2B 100%);
+            border: 1px solid rgba(10,124,255,0.15);
+            border-radius: 16px;
+            padding: 1.8rem 2rem;
+            margin-bottom: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 1rem;
+        ">
+            <div>
+                <h2 style="margin:0 0 0.3rem 0; font-size:1.5rem; color:#E6EDF3;">
+                    {greeting}, {email_name} 👋
+                </h2>
+                <p style="margin:0; color:#8B949E; font-size:0.9rem;">
+                    {t("header_subtitle")}
+                </p>
+                <div style="margin-top:0.5rem;">
+                    <span style="background:{badge_color}22; color:{badge_color};
+                        padding:3px 12px; border-radius:12px; font-size:0.75rem;
+                        font-weight:600; border:1px solid {badge_color}44;">
+                        {plan_name} Plan
+                    </span>
+                    <span style="background:rgba(10,124,255,0.08); color:#58A6FF;
+                        padding:3px 12px; border-radius:12px; font-size:0.75rem;
+                        font-weight:600; border:1px solid rgba(10,124,255,0.2); margin-left:6px;">
+                        {t("header_badge")}
+                    </span>
+                </div>
+            </div>
+            <div style="
+                background: rgba(10,124,255,0.06);
+                border: 1px solid rgba(10,124,255,0.15);
+                border-radius: 12px;
+                padding: 1rem 1.5rem;
+                min-width: 200px;
+                text-align: center;
+            ">
+                <div style="font-size:0.75rem; color:#8B949E; margin-bottom:0.4rem; letter-spacing:0.5px;">
+                    {"本月用量" if t("log_in") == "登录" else "MONTHLY USAGE"}
+                </div>
+                <div style="font-size:1.8rem; font-weight:700; color:#E6EDF3; line-height:1;">
+                    {used}<span style="font-size:1rem; color:#8B949E;">/{display_limit}</span>
+                </div>
+                <div style="
+                    margin-top:0.5rem;
+                    height:6px;
+                    background:rgba(255,255,255,0.06);
+                    border-radius:3px;
+                    overflow:hidden;
+                ">
+                    <div style="
+                        width:{pct_int}%;
+                        height:100%;
+                        background:linear-gradient(90deg,#0A7CFF,#00D4AA);
+                        border-radius:3px;
+                    "></div>
+                </div>
+            </div>
         </div>
         """,
         unsafe_allow_html=True,
