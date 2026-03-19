@@ -294,14 +294,14 @@ def inject_css():
 def render_header():
     """Render a compact greeting bar with date on the right."""
     from utils.auth import get_user
-    import datetime
+    import datetime, zoneinfo
 
     user = get_user()
     if not user:
         return
 
     is_zh = t("log_in") == "登录"
-    now = datetime.datetime.now()
+    now = datetime.datetime.now(zoneinfo.ZoneInfo("Australia/Sydney"))
     hour = now.hour
 
     if hour < 12:
