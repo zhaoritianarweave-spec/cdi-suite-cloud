@@ -13,6 +13,7 @@ import base64
 import streamlit as st
 from utils import gemini_client
 from utils.ui_components import section_header
+from utils.i18n import t, t_fmt
 
 DEMO_DIR = pathlib.Path(__file__).resolve().parent.parent / "assets" / "demo_contracts"
 
@@ -20,37 +21,42 @@ DEMO_DIR = pathlib.Path(__file__).resolve().parent.parent / "assets" / "demo_con
 # Finding categories & severity (mirrored from the original TS types)
 # ---------------------------------------------------------------------------
 
-CATEGORY_LABELS = {
-    "legal_compliance": "Legal Compliance",
-    "financial_risk": "Financial Risk",
-    "missing_clauses": "Missing Clauses",
-    "unfair_terms": "Unfair Terms",
-    "payment_terms": "Payment Terms",
-    "liability_insurance": "Liability & Insurance",
-    "dispute_resolution": "Dispute Resolution",
-    "variations_scope": "Variations & Scope",
-    "timeframes_delays": "Timeframes & Delays",
-    "regulatory": "Regulatory",
-}
+def _category_labels():
+    return {
+        "legal_compliance": t("rc_legal"),
+        "financial_risk": t("rc_financial"),
+        "missing_clauses": t("rc_missing"),
+        "unfair_terms": t("rc_unfair"),
+        "payment_terms": t("rc_payment"),
+        "liability_insurance": t("rc_liability"),
+        "dispute_resolution": t("rc_dispute"),
+        "variations_scope": t("rc_variations"),
+        "timeframes_delays": t("rc_timeframes"),
+        "regulatory": t("rc_regulatory"),
+    }
 
-SEVERITY_CONFIG = {
-    "high": {"color": "#DC2626", "bg": "#FEF2F2", "label": "HIGH RISK", "emoji": "🔴"},
-    "medium": {"color": "#D97706", "bg": "#FFFBEB", "label": "MEDIUM", "emoji": "🟡"},
-    "low": {"color": "#2563EB", "bg": "#EFF6FF", "label": "LOW", "emoji": "🟢"},
-}
 
-PROGRESS_MESSAGES = [
-    "Uploading contract documents...",
-    "Parsing document structure...",
-    "Identifying contract clauses...",
-    "Cross-referencing Australian legislation...",
-    "Checking Security of Payment Act compliance...",
-    "Evaluating unfair contract terms...",
-    "Analysing payment schedules...",
-    "Reviewing insurance & liability provisions...",
-    "Benchmarking against market rates...",
-    "Compiling risk assessment report...",
-]
+def _severity_config():
+    return {
+        "high": {"color": "#DC2626", "bg": "#FEF2F2", "label": t("severity_high"), "emoji": "🔴"},
+        "medium": {"color": "#D97706", "bg": "#FFFBEB", "label": t("severity_medium"), "emoji": "🟡"},
+        "low": {"color": "#2563EB", "bg": "#EFF6FF", "label": t("severity_low"), "emoji": "🟢"},
+    }
+
+
+def _progress_messages():
+    return [
+        t("t4_p1"),
+        t("t4_p2"),
+        t("t4_p3"),
+        t("t4_p4"),
+        t("t4_p5"),
+        t("t4_p6"),
+        t("t4_p7"),
+        t("t4_p8"),
+        t("t4_p9"),
+        t("t4_p10"),
+    ]
 
 # ---------------------------------------------------------------------------
 # Prompts (ported from risk-analysis.ts and system-prompt.ts)
@@ -213,7 +219,7 @@ def _extract_text_from_docx(file_bytes: bytes) -> str:
     ns = {"w": "http://schemas.openxmlformats.org/wordprocessingml/2006/main"}
     paragraphs = []
     for p in root.iter(f"{{{ns['w']}}}p"):
-        texts = [t.text for t in p.iter(f"{{{ns['w']}}}t") if t.text]
+        texts = [node.text for node in p.iter(f"{{{ns['w']}}}t") if node.text]
         if texts:
             paragraphs.append("".join(texts))
     return "\n".join(paragraphs)
@@ -317,7 +323,9 @@ def _generate_report_html(result: dict) -> str:
     """Generate a downloadable HTML report from the analysis result."""
     summary = result.get("summary", {})
     findings = result.get("findings", [])
-    sev = SEVERITY_CONFIG.get(summary.get("overallRiskLevel", "medium"), SEVERITY_CONFIG["medium"])
+    sev_cfg = _severity_config()
+    cat_labels = _category_labels()
+    sev = sev_cfg.get(summary.get("overallRiskLevel", "medium"), sev_cfg["medium"])
 
     # Group findings by category
     grouped: dict[str, list] = {}
@@ -327,10 +335,10 @@ def _generate_report_html(result: dict) -> str:
 
     findings_html = ""
     for cat, cat_findings in grouped.items():
-        cat_label = CATEGORY_LABELS.get(cat, cat.replace("_", " ").title())
+        cat_label = cat_labels.get(cat, cat.replace("_", " ").title())
         findings_html += f'<h2 style="font-size:20px;color:#1e293b;margin:32px 0 16px;padding-bottom:8px;border-bottom:2px solid #e2e8f0;">{cat_label} ({len(cat_findings)})</h2>'
         for f in cat_findings:
-            fs = SEVERITY_CONFIG.get(f.get("severity", "low"), SEVERITY_CONFIG["low"])
+            fs = sev_cfg.get(f.get("severity", "low"), sev_cfg["low"])
             findings_html += f'''
             <div style="border:1px solid #e2e8f0;border-radius:8px;margin-bottom:16px;overflow:hidden;">
               <div style="padding:16px;border-bottom:1px solid #e2e8f0;display:flex;align-items:center;gap:12px;">
@@ -448,11 +456,9 @@ def _render_progress(container, status_el, pct: int, msg: str, done: bool = Fals
 
     if done:
         status_el.markdown(
-            "<div style='display:flex;align-items:center;gap:8px;'>"
-            "<span style='color:#3FB950;font-weight:700;'>✓ ANALYSIS COMPLETE</span>"
-            "<span style='color:#8B949E;'>|</span>"
-            "<span style='color:#E6EDF3;'>Risk assessment delivered</span>"
-            "</div>",
+            f"<div style='display:flex;align-items:center;gap:8px;'>"
+            f"<span style='color:#3FB950;font-weight:700;'>{t('t4_complete')}</span>"
+            f"</div>",
             unsafe_allow_html=True,
         )
     else:
@@ -471,12 +477,8 @@ def _render_progress(container, status_el, pct: int, msg: str, done: bool = Fals
 # ---------------------------------------------------------------------------
 
 def render():
-    section_header("📜", "ContractGuard — Clause Risk Analyser")
-    st.caption(
-        "Upload a construction contract — the Generative Architecture Engine checks "
-        "Australian legislation compliance, identifies unfair terms, benchmarks "
-        "financial provisions and generates a comprehensive risk report."
-    )
+    section_header("📜", t("t4_title"))
+    st.caption(t("t4_caption"))
     st.markdown("---")
 
     # --- Layout ------------------------------------------------
@@ -485,9 +487,9 @@ def render():
     doc_data: list[dict] | None = None
 
     with col_left:
-        st.markdown("##### Contract Documents")
+        st.markdown(f"##### {t('t4_documents')}")
         uploaded_files = st.file_uploader(
-            "Upload contract documents",
+            t("t4_upload"),
             type=["pdf", "docx", "doc", "jpg", "jpeg", "png"],
             accept_multiple_files=True,
             key="tab4_upload",
@@ -531,7 +533,7 @@ def render():
         demos = _get_demo_contracts()
         if demos:
             st.markdown(
-                "<span style='color:#8B949E;font-size:0.8rem;'>OR SELECT A DEMO CONTRACT</span>",
+                f"<span style='color:#8B949E;font-size:0.8rem;'>{t('t4_demo_label')}</span>",
                 unsafe_allow_html=True,
             )
             demo_cols = st.columns(min(len(demos), 2))
@@ -574,26 +576,26 @@ def render():
                     )
 
     with col_right:
-        st.markdown("##### Analysis Scope")
+        st.markdown(f"##### {t('t4_scope')}")
 
-        focus_options = list(CATEGORY_LABELS.values())
+        focus_options = list(_category_labels().values())
         selected_focus = st.multiselect(
-            "Risk Categories",
+            t("t4_risk_categories"),
             focus_options,
             default=focus_options[:5],
             key="tab4_focus",
-            help="Select which risk categories to evaluate. All selected by default.",
+            help=t("t4_risk_help"),
         )
 
         analyse = st.button(
-            "🛡️ Analyse Contract",
+            t("t4_analyse_btn"),
             type="primary",
             use_container_width=True,
             disabled=doc_data is None,
         )
 
         if doc_data is None:
-            st.info("Upload a contract document to activate the engine.")
+            st.info(t("t4_upload_hint"))
 
     # --- Analysis execution ------------------------------------
     if analyse and doc_data:
@@ -611,11 +613,12 @@ def render():
         status_text = st.empty()
 
         # Animate progress
-        _render_progress(progress_container, status_text, 1, PROGRESS_MESSAGES[0])
+        prog_msgs = _progress_messages()
+        _render_progress(progress_container, status_text, 1, prog_msgs[0])
         time.sleep(0.3)
 
-        for i, msg in enumerate(PROGRESS_MESSAGES):
-            pct = int(((i + 1) / len(PROGRESS_MESSAGES)) * 60) + 1
+        for i, msg in enumerate(prog_msgs):
+            pct = int(((i + 1) / len(prog_msgs)) * 60) + 1
             _render_progress(progress_container, status_text, pct, msg)
             time.sleep(0.4)
 
@@ -629,10 +632,11 @@ def render():
             # Record usage only after successful analysis
             if _user:
                 record_usage(_user["id"], "contract_guard", gemini_client.get_model_id())
+                st.rerun()
         else:
             progress_container.empty()
             status_text.empty()
-            st.error("Analysis failed. Please check your document and retry.")
+            st.error(t("t4_analysis_failed"))
 
     # --- Display results ---------------------------------------
     if "tab4_results" in st.session_state and st.session_state["tab4_results"]:
@@ -643,9 +647,9 @@ def render():
         st.markdown("---")
 
         # --- Risk summary metrics ---
-        section_header("🛡️", "Risk Assessment")
+        section_header("🛡️", t("t4_results_title"))
 
-        overall_sev = SEVERITY_CONFIG.get(summary.get("overallRiskLevel", "medium"), SEVERITY_CONFIG["medium"])
+        overall_sev = _severity_config().get(summary.get("overallRiskLevel", "medium"), _severity_config()["medium"])
 
         metric_cols = st.columns(4)
         with metric_cols[0]:
@@ -654,7 +658,7 @@ def render():
                 f"border-radius:10px;border:1px solid {overall_sev['color']}44;'>"
                 f"<div style='color:{overall_sev['color']};font-size:1.4rem;font-weight:800;'>"
                 f"{overall_sev['label']}</div>"
-                f"<div style='color:#8B949E;font-size:0.75rem;margin-top:4px;'>Overall Risk</div>"
+                f"<div style='color:#8B949E;font-size:0.75rem;margin-top:4px;'>{t('t4_overall_risk')}</div>"
                 f"</div>",
                 unsafe_allow_html=True,
             )
@@ -664,7 +668,7 @@ def render():
                 f"border-radius:10px;border:1px solid #DC262644;'>"
                 f"<div style='color:#DC2626;font-size:1.4rem;font-weight:800;'>"
                 f"{summary.get('highRiskCount', 0)}</div>"
-                f"<div style='color:#8B949E;font-size:0.75rem;margin-top:4px;'>High Risk</div>"
+                f"<div style='color:#8B949E;font-size:0.75rem;margin-top:4px;'>{t('t4_high_risk')}</div>"
                 f"</div>",
                 unsafe_allow_html=True,
             )
@@ -674,7 +678,7 @@ def render():
                 f"border-radius:10px;border:1px solid #D9770644;'>"
                 f"<div style='color:#D97706;font-size:1.4rem;font-weight:800;'>"
                 f"{summary.get('mediumRiskCount', 0)}</div>"
-                f"<div style='color:#8B949E;font-size:0.75rem;margin-top:4px;'>Medium</div>"
+                f"<div style='color:#8B949E;font-size:0.75rem;margin-top:4px;'>{t('t4_medium')}</div>"
                 f"</div>",
                 unsafe_allow_html=True,
             )
@@ -684,7 +688,7 @@ def render():
                 f"border-radius:10px;border:1px solid #2563EB44;'>"
                 f"<div style='color:#2563EB;font-size:1.4rem;font-weight:800;'>"
                 f"{summary.get('lowRiskCount', 0)}</div>"
-                f"<div style='color:#8B949E;font-size:0.75rem;margin-top:4px;'>Low Risk</div>"
+                f"<div style='color:#8B949E;font-size:0.75rem;margin-top:4px;'>{t('t4_low_risk')}</div>"
                 f"</div>",
                 unsafe_allow_html=True,
             )
@@ -699,7 +703,7 @@ def render():
             st.markdown(" &nbsp;|&nbsp; ".join(info_parts))
 
         # --- Sub-tabs for report sections ---
-        tab_labels = ["📋 Executive Summary", "🔍 Detailed Findings", "📊 Risk by Category"]
+        tab_labels = [t("t4_tab_summary"), t("t4_tab_findings"), t("t4_tab_risk_chart")]
         result_tabs = st.tabs(tab_labels)
 
         # Executive Summary tab
@@ -709,11 +713,11 @@ def render():
         # Detailed Findings tab
         with result_tabs[1]:
             if not findings:
-                st.info("No findings to display.")
+                st.info(t("t4_no_findings"))
             else:
                 for f in findings:
-                    fs = SEVERITY_CONFIG.get(f.get("severity", "low"), SEVERITY_CONFIG["low"])
-                    cat_label = CATEGORY_LABELS.get(f.get("category", ""), f.get("category", ""))
+                    fs = _severity_config().get(f.get("severity", "low"), _severity_config()["low"])
+                    cat_label = _category_labels().get(f.get("category", ""), f.get("category", ""))
 
                     with st.expander(
                         f"{fs['emoji']} **{f.get('title', 'Finding')}** — {cat_label}",
@@ -721,7 +725,7 @@ def render():
                     ):
                         st.markdown(f.get("description", ""))
                         st.markdown("---")
-                        st.markdown(f"**Recommendation:** {f.get('recommendation', '')}")
+                        st.markdown(f"**{t('t4_recommendation')}** {f.get('recommendation', '')}")
 
                         detail_cols = st.columns(3)
                         with detail_cols[0]:
@@ -742,7 +746,7 @@ def render():
                         # Market benchmark table
                         if f.get("marketBenchmark"):
                             mb = f["marketBenchmark"]
-                            st.markdown("**Market Benchmark:**")
+                            st.markdown(f"**{t('t4_benchmark')}**")
                             bm_data = {
                                 "": ["Contract Rate", "Market Rate", "Variance"],
                                 mb.get("item", "Item"): [
@@ -761,7 +765,7 @@ def render():
                 grouped.setdefault(cat, []).append(f)
 
             for cat, cat_findings in grouped.items():
-                cat_label = CATEGORY_LABELS.get(cat, cat.replace("_", " ").title())
+                cat_label = _category_labels().get(cat, cat.replace("_", " ").title())
                 severity_counts = {"high": 0, "medium": 0, "low": 0}
                 for f in cat_findings:
                     sev_key = f.get("severity", "low")
@@ -784,7 +788,7 @@ def render():
                     unsafe_allow_html=True,
                 )
                 for f in cat_findings:
-                    fs = SEVERITY_CONFIG.get(f.get("severity", "low"), SEVERITY_CONFIG["low"])
+                    fs = _severity_config().get(f.get("severity", "low"), _severity_config()["low"])
                     st.markdown(
                         f"<div style='padding:6px 12px 6px 20px;border-left:3px solid {fs['color']};"
                         f"margin:4px 0 4px 8px;font-size:0.9rem;'>"
@@ -799,7 +803,7 @@ def render():
         with dl_cols[0]:
             html_report = _generate_report_html(result)
             st.download_button(
-                label="📄 Download Full Report (.html)",
+                label=t("t4_download_report"),
                 data=html_report,
                 file_name="contractguard_risk_report.html",
                 mime="text/html",
@@ -809,7 +813,7 @@ def render():
         with dl_cols[1]:
             json_data = json.dumps(result, indent=2, ensure_ascii=False)
             st.download_button(
-                label="📊 Download Raw Data (.json)",
+                label=t("t4_download_json"),
                 data=json_data,
                 file_name="contractguard_analysis.json",
                 mime="application/json",

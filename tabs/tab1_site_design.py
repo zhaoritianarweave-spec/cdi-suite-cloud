@@ -2,51 +2,56 @@ import pathlib
 import time
 import streamlit as st
 from utils import gemini_client
+from utils.i18n import t, t_fmt
 from utils.ui_components import section_header
 
 DEMO_DIR = pathlib.Path(__file__).resolve().parent.parent / "assets" / "demo_photos"
 
-PROJECT_TYPES = [
-    "Residential - House",
-    "Townhouse / Duplex",
-    "Apartment",
-    "Commercial",
-    "Landscape / Streetscape",
-    "Civil Infrastructure",
-    "Mixed Use",
-]
+def _project_types():
+    return [
+        t("pt_residential"),
+        t("pt_townhouse"),
+        t("pt_apartment"),
+        t("pt_commercial"),
+        t("pt_landscape"),
+        t("pt_civil"),
+        t("pt_mixed"),
+    ]
 
-DESIGN_STYLES = [
-    "Modern",
-    "Traditional",
-    "Industrial",
-    "Minimalist",
-    "Sustainable",
-    "Coastal",
-]
+def _design_styles():
+    return [
+        t("ds_modern"),
+        t("ds_traditional"),
+        t("ds_industrial"),
+        t("ds_minimalist"),
+        t("ds_sustainable"),
+        t("ds_coastal"),
+    ]
 
-VIEWPOINTS = {
-    "🏠 Front Elevation": "close-up front elevation, camera at eye-level about 8 metres from the front door, tightly framed on the building facade, showing entrance detail, front door, porch, garage doors, facade materials and textures, with some foreground landscaping. Golden hour warm lighting. This is a CLOSE SHOT — do NOT show the full street or distant surroundings.",
-    "🛩️ Bird's Eye / Aerial": "bird's-eye aerial perspective looking down at 45 degrees from about 50 metres altitude, showing the FULL site layout including roof plan, driveway, front yard, backyard, side setbacks, landscaping, pool if any, and surrounding neighbourhood context. Wide shot.",
-    "🌳 Rear / Garden View": "The camera is BEHIND the house, positioned in the BACKYARD, looking TOWARD the REAR WALL of the building. Show the BACK of the house — rear sliding doors, alfresco area, deck or patio, pool if applicable, backyard lawn, rear fence and garden landscaping. The front door, front driveway and street must NOT be visible at all — they are on the opposite side of the building. This is a completely different scene from the front elevation.",
-    "🚶 Street Level": "street-level pedestrian perspective from the footpath across the road, showing the full building in its streetscape context with neighbouring houses, street trees, footpath, fencing and letterbox. Wide contextual shot at eye level.",
-}
+def _viewpoints():
+    return {
+        t("vp_front"): "close-up front elevation, camera at eye-level about 8 metres from the front door, tightly framed on the building facade, showing entrance detail, front door, porch, garage doors, facade materials and textures, with some foreground landscaping. Golden hour warm lighting. This is a CLOSE SHOT — do NOT show the full street or distant surroundings.",
+        t("vp_aerial"): "bird's-eye aerial perspective looking down at 45 degrees from about 50 metres altitude, showing the FULL site layout including roof plan, driveway, front yard, backyard, side setbacks, landscaping, pool if any, and surrounding neighbourhood context. Wide shot.",
+        t("vp_rear"): "The camera is BEHIND the house, positioned in the BACKYARD, looking TOWARD the REAR WALL of the building. Show the BACK of the house — rear sliding doors, alfresco area, deck or patio, pool if applicable, backyard lawn, rear fence and garden landscaping. The front door, front driveway and street must NOT be visible at all — they are on the opposite side of the building. This is a completely different scene from the front elevation.",
+        t("vp_street"): "street-level pedestrian perspective from the footpath across the road, showing the full building in its streetscape context with neighbouring houses, street trees, footpath, fencing and letterbox. Wide contextual shot at eye level.",
+    }
 
 # Quick-pick design feature chips
-QUICK_FEATURES = {
-    "🚗 Double Garage":      "large double garage with automatic door",
-    "🚙 Triple Garage":      "oversized triple car garage",
-    "🌿 Luxury Landscaping":  "premium landscaping with mature trees, hedge borders and garden lighting",
-    "🏊 Backyard Pool":       "resort-style swimming pool with surrounding deck in the backyard",
-    "🍖 Outdoor Kitchen":     "built-in outdoor BBQ and alfresco kitchen area",
-    "🌳 Large Backyard":      "spacious rear yard with open lawn area",
-    "🏡 Wrap-around Porch":   "wide wrap-around verandah or porch",
-    "🪟 Floor-to-ceiling Glass": "floor-to-ceiling glass windows and curtain walls for natural light",
-    "☀️ Rooftop Terrace":     "accessible rooftop terrace with lounge area",
-    "🔒 Gated Entry":         "secure gated front entrance with intercom",
-    "🏗️ Two Storey":          "two-storey design with balcony on upper level",
-    "🏔️ Three Storey":        "three-storey design maximising floor area",
-}
+def _quick_features():
+    return {
+        t("qf_double_garage"):      "large double garage with automatic door",
+        t("qf_triple_garage"):      "oversized triple car garage",
+        t("qf_luxury_landscaping"):  "premium landscaping with mature trees, hedge borders and garden lighting",
+        t("qf_backyard_pool"):       "resort-style swimming pool with surrounding deck in the backyard",
+        t("qf_outdoor_kitchen"):     "built-in outdoor BBQ and alfresco kitchen area",
+        t("qf_large_backyard"):      "spacious rear yard with open lawn area",
+        t("qf_wrap_porch"):          "wide wrap-around verandah or porch",
+        t("qf_floor_glass"):         "floor-to-ceiling glass windows and curtain walls for natural light",
+        t("qf_rooftop_terrace"):     "accessible rooftop terrace with lounge area",
+        t("qf_gated_entry"):         "secure gated front entrance with intercom",
+        t("qf_two_storey"):          "two-storey design with balcony on upper level",
+        t("qf_three_storey"):        "three-storey design maximising floor area",
+    }
 
 # Fun progress messages shown during generation
 PROGRESS_MESSAGES = [
@@ -158,14 +163,11 @@ def _render_video_section():
         return
 
     st.markdown("---")
-    section_header("🎬", "Cinematic Flyover Video")
-    st.caption(
-        "Generate an 8-second cinematic fly-around video from the aerial rendering "
-        "using the Generative Architecture Engine."
-    )
+    section_header("🎬", t("t1_video_title"))
+    st.caption(t("t1_video_caption"))
 
     gen_video = st.button(
-        "🎬 Generate Flyover Video",
+        t("t1_video_btn"),
         type="primary",
         use_container_width=True,
         key="tab1_gen_video",
@@ -206,9 +208,9 @@ def _render_video_section():
             if done:
                 video_status.markdown(
                     "<div style='display:flex;align-items:center;gap:8px;'>"
-                    "<span style='color:#3FB950;font-weight:700;'>✓ VIDEO READY</span>"
+                    f"<span style='color:#3FB950;font-weight:700;'>{t('t1_video_ready')}</span>"
                     "<span style='color:#8B949E;'>|</span>"
-                    "<span style='color:#E6EDF3;'>Cinematic flyover delivered</span>"
+                    f"<span style='color:#E6EDF3;'>{t('t1_video_ready')}</span>"
                     "</div>",
                     unsafe_allow_html=True,
                 )
@@ -255,13 +257,13 @@ def _render_video_section():
         else:
             video_progress.empty()
             video_status.empty()
-            st.error("Video generation failed. Please try again.")
+            st.error(t("t1_video_failed"))
 
     # Display previously generated video
     if "tab1_video" in st.session_state and st.session_state["tab1_video"]:
         st.video(st.session_state["tab1_video"], format="video/mp4")
         st.download_button(
-            label="⬇️ Download Flyover Video",
+            label=t("t1_video_download"),
             data=st.session_state["tab1_video"],
             file_name="design_flyover.mp4",
             mime="video/mp4",
@@ -274,11 +276,8 @@ def _render_video_section():
 # ---------------------------------------------------------------------------
 
 def render():
-    section_header("📐", "Site Intelligence Renderer")
-    st.caption(
-        "Upload a site photograph — the Generative Architecture Engine analyses existing conditions "
-        "and produces multi-angle photorealistic renderings with design consistency across all viewpoints."
-    )
+    section_header("📐", t("t1_title"))
+    st.caption(t("t1_caption"))
     st.markdown("---")
 
     # --- Layout -------------------------------------------------
@@ -288,9 +287,9 @@ def render():
     mime_type = "image/jpeg"
 
     with col_left:
-        st.markdown("##### Site Photograph")
+        st.markdown(f"##### {t('t1_site_photo')}")
         uploaded = st.file_uploader(
-            "Upload a site photo",
+            t("t1_upload"),
             type=["jpg", "jpeg", "png"],
             key="tab1_upload",
             label_visibility="collapsed",
@@ -304,7 +303,7 @@ def render():
         demo_photos = _get_demo_photos()
         if demo_photos:
             st.markdown(
-                "<span style='color:#8B949E;font-size:0.8rem;'>OR SELECT A DEMO SITE</span>",
+                f"<span style='color:#8B949E;font-size:0.8rem;'>{t('t1_demo_label')}</span>",
                 unsafe_allow_html=True,
             )
             demo_cols = st.columns(len(demo_photos))
@@ -321,61 +320,63 @@ def render():
                     st.image(image_bytes, caption=f"Demo — {demo_path.stem}", use_container_width=True)
 
     with col_right:
-        st.markdown("##### Design Parameters")
+        st.markdown(f"##### {t('t1_design_params')}")
 
         r1c1, r1c2 = st.columns(2)
         with r1c1:
-            project_type = st.selectbox("Project Type", PROJECT_TYPES, key="tab1_project_type")
+            project_type = st.selectbox(t("t1_project_type"), _project_types(), key="tab1_project_type")
         with r1c2:
             style = st.selectbox(
-                "Design Language",
-                DESIGN_STYLES,
+                t("t1_design_language"),
+                _design_styles(),
                 index=0,
                 key="tab1_style",
             )
 
         # --- Quick-pick feature chips ---
         st.markdown(
-            "<span style='color:#8B949E;font-size:0.8rem;letter-spacing:0.5px;'>"
-            "QUICK-PICK DESIGN FEATURES</span>",
+            f"<span style='color:#8B949E;font-size:0.8rem;letter-spacing:0.5px;'>"
+            f"{t('t1_quick_features_label')}</span>",
             unsafe_allow_html=True,
         )
+        QUICK_FEATURES = _quick_features()
         selected_features = st.multiselect(
-            "Quick Features",
+            t("t1_quick_features"),
             list(QUICK_FEATURES.keys()),
-            default=["🌿 Luxury Landscaping"],
+            default=[t("qf_luxury_landscaping")],
             key="tab1_features",
             label_visibility="collapsed",
         )
 
         # --- Rendering viewpoints ---
+        VIEWPOINTS = _viewpoints()
         selected_views = st.multiselect(
-            "Rendering Viewpoints",
+            t("t1_viewpoints"),
             list(VIEWPOINTS.keys()),
-            default=["🛩️ Bird's Eye / Aerial", "🏠 Front Elevation"],
+            default=[t("vp_aerial"), t("vp_front")],
             key="tab1_views",
         )
 
         # --- Free-form design brief ---
         design_brief = st.text_area(
-            "Design Brief",
-            placeholder="Describe your vision... e.g., Open-plan living facing north, master suite on ground floor, seamless indoor-outdoor flow to the pool area...",
+            t("t1_design_brief"),
+            placeholder=t("t1_brief_placeholder"),
             key="tab1_brief",
             height=80,
         )
 
         total_images = len(selected_views)
         generate = st.button(
-            f"Generate {total_images} Rendering{'s' if total_images != 1 else ''}",
+            t_fmt("t1_generate_btn", n=total_images),
             type="primary",
             use_container_width=True,
             disabled=image_bytes is None or total_images == 0,
         )
 
         if image_bytes is None:
-            st.info("Upload a site photograph to activate the engine.")
+            st.info(t("t1_upload_hint"))
         elif total_images == 0:
-            st.warning("Select at least one viewpoint.")
+            st.warning(t("t1_select_viewpoint"))
 
     # --- Generation (chained for consistency) --------------------
     if generate and image_bytes is not None and selected_views:
@@ -395,7 +396,7 @@ def render():
         ) if selected_features else "standard features"
         brief_str = design_brief.strip() if design_brief.strip() else "no specific brief"
 
-        ANCHOR_KEY = "🛩️ Bird's Eye / Aerial"
+        ANCHOR_KEY = t("vp_aerial")
         ordered_views = list(selected_views)
         if ANCHOR_KEY in ordered_views:
             ordered_views.remove(ANCHOR_KEY)
@@ -454,9 +455,9 @@ def render():
             if done:
                 status_text.markdown(
                     "<div style='display:flex;align-items:center;gap:8px;'>"
-                    "<span style='color:#3FB950;font-weight:700;'>✓ COMPLETE</span>"
+                    f"<span style='color:#3FB950;font-weight:700;'>{t('complete_label')}</span>"
                     "<span style='color:#8B949E;'>|</span>"
-                    "<span style='color:#E6EDF3;'>All renderings delivered</span>"
+                    f"<span style='color:#E6EDF3;'>{t('complete_label')}</span>"
                     "</div>",
                     unsafe_allow_html=True,
                 )
@@ -473,7 +474,7 @@ def render():
                 )
 
         # Start from 1%
-        _render_progress(1, f"Step 0/{len(ordered_views)}| Warming up engine...")
+        _render_progress(1, f"Step 0/{len(ordered_views)}| {t('t1_progress_warmup')}")
         time.sleep(0.5)
 
         for i, view_name in enumerate(ordered_views):
@@ -530,13 +531,14 @@ def render():
             # Record usage only after successful generation
             if _user:
                 record_usage(_user["id"], "site_renderer", "image-gen")
+                st.rerun()
         else:
-            st.error("Generation failed. Please adjust parameters and retry.")
+            st.error(t("generation_failed"))
 
     # --- Display results ----------------------------------------
     if "tab1_results" in st.session_state and st.session_state["tab1_results"]:
         st.markdown("---")
-        section_header("🖼️", "Generated Renderings")
+        section_header("🖼️", t("t1_results_title"))
 
         results = st.session_state["tab1_results"]
         cols = st.columns(min(len(results), 2))
@@ -554,7 +556,7 @@ def render():
 
                 safe_name = view_label.replace(" ", "_").replace("/", "_").lower()
                 st.download_button(
-                    label=f"Download {view_label}",
+                    label=t_fmt("t1_download", label=view_label),
                     data=r["image_bytes"],
                     file_name=f"design_{safe_name}.png",
                     mime="image/png",

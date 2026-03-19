@@ -4,27 +4,33 @@ import pathlib
 import time
 import streamlit as st
 from utils import gemini_client
+from utils.i18n import t, t_fmt
 from utils.ui_components import section_header, metric_row
 
 DEMO_DIR = pathlib.Path(__file__).resolve().parent.parent / "assets" / "demo_drawings"
 
-ANALYSIS_FOCUS = {
-    "📊 Quantity Take-off (QTO)": "QTO",
-    "🔍 Discrepancy / Error Detection": "ERRORS",
-    "✅ Compliance Check (BCA/AS)": "COMPLIANCE",
-    "🏗️ Constructability Review": "CONSTRUCTABILITY",
-    "💰 Cost Estimation Indicators": "COST",
-}
+def _analysis_focus() -> dict[str, str]:
+    """Build ANALYSIS_FOCUS at call-time so t() picks up the active locale."""
+    return {
+        t("af_qto"): "QTO",
+        t("af_discrepancy"): "ERRORS",
+        t("af_compliance"): "COMPLIANCE",
+        t("af_constructability"): "CONSTRUCTABILITY",
+        t("af_cost"): "COST",
+    }
 
-PROGRESS_MESSAGES = [
-    "Scanning drawing geometry...",
-    "Identifying annotation layers...",
-    "Extracting dimensions & quantities...",
-    "Cross-referencing standard symbols...",
-    "Checking dimensional consistency...",
-    "Evaluating compliance references...",
-    "Compiling analysis report...",
-]
+
+def _progress_messages() -> list[str]:
+    """Build progress messages at call-time so t() picks up the active locale."""
+    return [
+        t("t2_p1"),
+        t("t2_p2"),
+        t("t2_p3"),
+        t("t2_p4"),
+        t("t2_p5"),
+        t("t2_p6"),
+        t("t2_p7"),
+    ]
 
 
 # ---------------------------------------------------------------------------
@@ -138,11 +144,8 @@ def _get_demo_drawings() -> list[pathlib.Path]:
 # ---------------------------------------------------------------------------
 
 def render():
-    section_header("📐", "Drawing Intelligence & Quantity Take-Off")
-    st.caption(
-        "Upload a construction drawing — the Generative Architecture Engine reads annotations, "
-        "extracts quantities, detects discrepancies and checks compliance automatically."
-    )
+    section_header("📐", t("t2_title"))
+    st.caption(t("t2_caption"))
     st.markdown("---")
 
     # --- Layout -------------------------------------------------
@@ -152,9 +155,9 @@ def render():
     mime_type = "image/jpeg"
 
     with col_left:
-        st.markdown("##### Construction Drawing")
+        st.markdown(f"##### {t('t2_drawing')}")
         uploaded = st.file_uploader(
-            "Upload a drawing",
+            t("t2_upload"),
             type=["jpg", "jpeg", "png", "pdf"],
             key="tab2_upload",
             label_visibility="collapsed",
@@ -171,7 +174,7 @@ def render():
         demo_drawings = _get_demo_drawings()
         if demo_drawings:
             st.markdown(
-                "<span style='color:#8B949E;font-size:0.8rem;'>OR SELECT A DEMO DRAWING</span>",
+                f"<span style='color:#8B949E;font-size:0.8rem;'>{t('t2_demo_label')}</span>",
                 unsafe_allow_html=True,
             )
             demo_cols = st.columns(min(len(demo_drawings), 3))
@@ -192,32 +195,33 @@ def render():
                         st.image(image_bytes, caption=f"Demo — {demo_path.stem}", use_container_width=True)
 
     with col_right:
-        st.markdown("##### Analysis Parameters")
+        st.markdown(f"##### {t('t2_analysis_params')}")
 
         st.markdown(
-            "<span style='color:#8B949E;font-size:0.8rem;letter-spacing:0.5px;'>"
-            "ANALYSIS FOCUS</span>",
+            f"<span style='color:#8B949E;font-size:0.8rem;letter-spacing:0.5px;'>"
+            f"{t('t2_focus_label')}</span>",
             unsafe_allow_html=True,
         )
+        focus_map = _analysis_focus()
         selected_focus = st.multiselect(
-            "Analysis Focus",
-            list(ANALYSIS_FOCUS.keys()),
-            default=["📊 Quantity Take-off (QTO)", "🔍 Discrepancy / Error Detection"],
+            t("t2_focus"),
+            list(focus_map.keys()),
+            default=[t("af_qto"), t("af_discrepancy")],
             key="tab2_focus",
             label_visibility="collapsed",
         )
 
         analyse = st.button(
-            "🔬 Analyse Drawing",
+            t("t2_analyse_btn"),
             type="primary",
             use_container_width=True,
             disabled=image_bytes is None or len(selected_focus) == 0,
         )
 
         if image_bytes is None:
-            st.info("Upload a construction drawing to activate the engine.")
+            st.info(t("t2_upload_hint"))
         elif len(selected_focus) == 0:
-            st.warning("Select at least one analysis focus.")
+            st.warning(t("t2_select_focus"))
 
     # --- Analysis execution -------------------------------------
     if analyse and image_bytes is not None and selected_focus:
@@ -231,7 +235,7 @@ def render():
                 st.stop()
         st.markdown("---")
 
-        focus_keys = [ANALYSIS_FOCUS[f] for f in selected_focus]
+        focus_keys = [focus_map[f] for f in selected_focus]
         prompt = _build_analysis_prompt(focus_keys)
 
         # --- Custom progress bar ---
@@ -268,11 +272,9 @@ def render():
 
             if done:
                 status_text.markdown(
-                    "<div style='display:flex;align-items:center;gap:8px;'>"
-                    "<span style='color:#3FB950;font-weight:700;'>✓ ANALYSIS COMPLETE</span>"
-                    "<span style='color:#8B949E;'>|</span>"
-                    "<span style='color:#E6EDF3;'>Full report delivered</span>"
-                    "</div>",
+                    f"<div style='display:flex;align-items:center;gap:8px;'>"
+                    f"<span style='color:#3FB950;font-weight:700;'>{t('t2_complete')}</span>"
+                    f"</div>",
                     unsafe_allow_html=True,
                 )
             else:
@@ -286,11 +288,12 @@ def render():
                 )
 
         # Animate progress before API call
-        _render_progress(1, PROGRESS_MESSAGES[0])
+        progress_msgs = _progress_messages()
+        _render_progress(1, progress_msgs[0])
         time.sleep(0.4)
 
-        for i, msg in enumerate(PROGRESS_MESSAGES):
-            pct = int(((i + 1) / len(PROGRESS_MESSAGES)) * 60) + 1
+        for i, msg in enumerate(progress_msgs):
+            pct = int(((i + 1) / len(progress_msgs)) * 60) + 1
             _render_progress(pct, msg)
             time.sleep(0.5)
 
@@ -310,6 +313,7 @@ def render():
             # Record usage only after successful analysis
             if _user:
                 record_usage(_user["id"], "drawing_analyser", gemini_client.get_model_id())
+                st.rerun()
         else:
             progress_container.empty()
             status_text.empty()
@@ -321,20 +325,20 @@ def render():
         focus_keys = st.session_state.get("tab2_focus_keys", [])
 
         st.markdown("---")
-        section_header("📊", "Analysis Report")
+        section_header("📊", t("t2_results_title"))
 
         # Build sub-tabs based on what was analysed
-        tab_labels = ["📋 Overview"]
+        tab_labels = [t("t2_tab_overview")]
         if "QTO" in focus_keys:
-            tab_labels.append("📊 Quantity Take-off")
+            tab_labels.append(t("t2_tab_qto"))
         if "ERRORS" in focus_keys:
-            tab_labels.append("🔍 Discrepancies")
+            tab_labels.append(t("t2_tab_discrepancies"))
         if "COMPLIANCE" in focus_keys:
-            tab_labels.append("✅ Compliance")
+            tab_labels.append(t("t2_tab_compliance"))
         if "CONSTRUCTABILITY" in focus_keys:
-            tab_labels.append("🏗️ Constructability")
+            tab_labels.append(t("t2_tab_constructability"))
         if "COST" in focus_keys:
-            tab_labels.append("💰 Cost Indicators")
+            tab_labels.append(t("t2_tab_cost"))
 
         # Parse the result into sections
         sections = _parse_sections(result_text)
@@ -359,7 +363,7 @@ def render():
                 if qto:
                     st.markdown(qto)
                 else:
-                    st.info("No quantity data extracted.")
+                    st.info(t("t2_no_qto"))
             tab_idx += 1
 
         # Errors tab
@@ -369,7 +373,7 @@ def render():
                 if errors:
                     st.markdown(errors)
                 else:
-                    st.info("No discrepancies detected.")
+                    st.info(t("t2_no_discrepancies"))
             tab_idx += 1
 
         # Compliance tab
@@ -379,7 +383,7 @@ def render():
                 if compliance:
                     st.markdown(compliance)
                 else:
-                    st.info("No compliance observations.")
+                    st.info(t("t2_no_compliance"))
             tab_idx += 1
 
         # Constructability tab
@@ -389,7 +393,7 @@ def render():
                 if construct:
                     st.markdown(construct)
                 else:
-                    st.info("No constructability notes.")
+                    st.info(t("t2_no_constructability"))
             tab_idx += 1
 
         # Cost tab
@@ -399,7 +403,7 @@ def render():
                 if cost:
                     st.markdown(cost)
                 else:
-                    st.info("No cost indicators generated.")
+                    st.info(t("t2_no_cost"))
             tab_idx += 1
 
         # --- Downloads ---
@@ -407,7 +411,7 @@ def render():
         dl_cols = st.columns(2)
         with dl_cols[0]:
             st.download_button(
-                label="📄 Download Full Report (.md)",
+                label=t("t2_download_report"),
                 data=result_text,
                 file_name="drawing_analysis_report.md",
                 mime="text/markdown",
@@ -419,7 +423,7 @@ def render():
             qto_csv = _extract_qto_csv(result_text)
             if qto_csv:
                 st.download_button(
-                    label="📊 Download QTO Table (.csv)",
+                    label=t("t2_download_qto"),
                     data=qto_csv,
                     file_name="quantity_takeoff.csv",
                     mime="text/csv",

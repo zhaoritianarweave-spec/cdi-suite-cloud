@@ -1,4 +1,5 @@
 import streamlit as st
+from utils.i18n import t, t_fmt
 
 # ---------------------------------------------------------------------------
 # Custom CSS — dark theme with blueprint / civil-tech aesthetic
@@ -147,11 +148,11 @@ def inject_css():
 def render_header():
     """Render the hero banner."""
     st.markdown(
-        """
+        f"""
         <div class="hero-banner">
-            <h1>CIVIL DESIGN INTELLIGENCE</h1>
-            <div class="subtitle">Architecture &middot; Engineering &middot; Visualisation</div>
-            <div class="tech-badge">POWERED BY GENERATIVE ARCHITECTURE ENGINE</div>
+            <h1>{t("header_title")}</h1>
+            <div class="subtitle">{t("header_subtitle")}</div>
+            <div class="tech-badge">{t("header_badge")}</div>
         </div>
         """,
         unsafe_allow_html=True,
@@ -173,14 +174,22 @@ def render_sidebar():
 
     with st.sidebar:
         st.markdown(
-            """
+            f"""
             <div class="sidebar-brand">
-                <div class="logo-text">CDI SUITE</div>
-                <div class="logo-sub">Civil Design Intelligence</div>
+                <div class="logo-text">{t("sidebar_brand")}</div>
+                <div class="logo-sub">{t("sidebar_brand_sub")}</div>
             </div>
             """,
             unsafe_allow_html=True,
         )
+
+        st.markdown("---")
+
+        # Language toggle
+        langs = ["English", "中文"]
+        cur = 1 if st.session_state.get("lang") == "zh" else 0
+        choice = st.selectbox("🌐", langs, index=cur, key="lang_select_sidebar", label_visibility="collapsed")
+        st.session_state["lang"] = "zh" if choice == "中文" else "en"
 
         st.markdown("---")
 
@@ -200,40 +209,40 @@ def render_sidebar():
                 f"<span style='background:{badge_color}22;color:{badge_color};"
                 f"padding:2px 10px;border-radius:10px;font-size:0.75rem;"
                 f"font-weight:600;border:1px solid {badge_color}44;'>"
-                f"{plan_name} Plan</span>",
+                f"{t_fmt('plan_label', name=plan_name)}</span>",
                 unsafe_allow_html=True,
             )
 
             # Usage display
-            display_limit = limit if limit < 999999 else "\u221e"
-            st.caption(f"Usage: {used} / {display_limit} this month")
+            display_limit = str(limit) if limit < 999999 else "\u221e"
+            st.caption(t_fmt("usage_label", used=used, limit=display_limit))
             if limit < 999999:
                 st.progress(min(used / limit, 1.0))
 
             if remaining == 0 and plan == "free":
-                st.warning("Free quota reached", icon="\U0001f512")
+                st.warning(t("free_quota_reached"), icon="\U0001f512")
 
             # Upgrade / Manage buttons
             if is_stripe_configured():
                 if plan == "free":
                     billing = st.radio(
                         "Billing",
-                        ["Monthly — A$99/mo", "Annual — A$69/mo (save 30%)"],
+                        [t("billing_monthly"), t("billing_annual")],
                         index=1,
                         key="billing_interval",
                         label_visibility="collapsed",
                     )
-                    interval = "annual" if "Annual" in billing else "monthly"
+                    interval = "annual" if "69" in billing else "monthly"
                     price_label = "A$69/mo" if interval == "annual" else "A$99/mo"
 
-                    if st.button(f"\u26a1 Upgrade to Pro — {price_label}", use_container_width=True, type="primary"):
+                    if st.button(t_fmt("upgrade_btn", price=price_label), use_container_width=True, type="primary"):
                         url = create_checkout_session(user["id"], user["email"], "pro", interval)
                         if url:
                             st.markdown(
                                 f'<meta http-equiv="refresh" content="0;url={url}">',
                                 unsafe_allow_html=True,
                             )
-                            st.info("Redirecting to checkout...")
+                            st.info(t("redirecting_checkout"))
                             st.stop()
                 else:
                     portal_url = create_customer_portal_url(user["id"])
@@ -242,21 +251,21 @@ def render_sidebar():
                             f"<a href='{portal_url}' target='_blank' style='"
                             f"display:block;text-align:center;padding:8px;border-radius:6px;"
                             f"border:1px solid #30363D;color:#E6EDF3;text-decoration:none;"
-                            f"font-size:0.85rem;'>Manage Subscription</a>",
+                            f"font-size:0.85rem;'>{t('manage_subscription')}</a>",
                             unsafe_allow_html=True,
                         )
 
             st.markdown("")
-            if st.button("Log Out", use_container_width=True):
+            if st.button(t("log_out"), use_container_width=True):
                 logout()
                 st.rerun()
 
         st.markdown("---")
         st.markdown(
-            """
+            f"""
             <div class="sidebar-footer">
-                Civil Design Intelligence Suite v1.0<br>
-                Generative Architecture Engine
+                {t("sidebar_footer_line1")}<br>
+                {t("sidebar_footer_line2")}
             </div>
             """,
             unsafe_allow_html=True,
