@@ -132,9 +132,144 @@ GLOBAL_CSS = """
     border: none;
     font-weight: 600;
     letter-spacing: 0.5px;
+    transition: all 0.25s ease;
 }
 [data-testid="stButton"] > button[kind="primary"]:hover {
     background: linear-gradient(135deg, #2E90FF 0%, #0A7CFF 100%);
+    box-shadow: 0 4px 15px rgba(10,124,255,0.3);
+    transform: translateY(-1px);
+}
+
+/* --- File uploader --- */
+[data-testid="stFileUploader"] {
+    border: 2px dashed rgba(10,124,255,0.25);
+    border-radius: 12px;
+    padding: 0.5rem;
+    transition: border-color 0.3s ease, background 0.3s ease;
+}
+[data-testid="stFileUploader"]:hover {
+    border-color: rgba(10,124,255,0.5);
+    background: rgba(10,124,255,0.03);
+}
+
+/* --- Images --- */
+[data-testid="stImage"] img {
+    border-radius: 10px;
+    border: 1px solid rgba(10,124,255,0.1);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+[data-testid="stImage"] img:hover {
+    transform: scale(1.01);
+    box-shadow: 0 6px 20px rgba(10,124,255,0.15);
+}
+
+/* --- Metrics --- */
+[data-testid="stMetric"] {
+    background: linear-gradient(145deg, #161B22, #1C2333);
+    border: 1px solid #30363D;
+    border-radius: 12px;
+    padding: 1rem;
+    transition: border-color 0.3s ease;
+}
+[data-testid="stMetric"]:hover {
+    border-color: rgba(10,124,255,0.3);
+}
+
+/* --- Progress bar glow --- */
+[data-testid="stProgress"] > div > div > div {
+    background: linear-gradient(90deg, #0A7CFF, #00D4AA) !important;
+    border-radius: 10px;
+    box-shadow: 0 0 8px rgba(10,124,255,0.3);
+}
+
+/* --- Expanders --- */
+[data-testid="stExpander"] {
+    border: 1px solid #30363D;
+    border-radius: 10px;
+    background: #161B22;
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+}
+[data-testid="stExpander"]:hover {
+    border-color: rgba(10,124,255,0.25);
+}
+
+/* --- Download buttons --- */
+[data-testid="stDownloadButton"] button {
+    border: 1px solid #30363D;
+    border-radius: 8px;
+    font-weight: 600;
+    letter-spacing: 0.3px;
+    transition: all 0.25s ease;
+}
+[data-testid="stDownloadButton"] button:hover {
+    border-color: #0A7CFF;
+    background: rgba(10,124,255,0.08);
+    box-shadow: 0 2px 10px rgba(10,124,255,0.15);
+}
+
+/* --- Selectbox & Multiselect --- */
+[data-testid="stSelectbox"] > div > div,
+[data-testid="stMultiSelect"] > div > div {
+    border-radius: 8px !important;
+    border-color: #30363D !important;
+    transition: border-color 0.3s ease;
+}
+[data-testid="stSelectbox"] > div > div:focus-within,
+[data-testid="stMultiSelect"] > div > div:focus-within {
+    border-color: #0A7CFF !important;
+    box-shadow: 0 0 0 1px rgba(10,124,255,0.3);
+}
+
+/* --- Text inputs --- */
+[data-testid="stTextInput"] input,
+[data-testid="stTextArea"] textarea {
+    border-radius: 8px !important;
+    border-color: #30363D !important;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+[data-testid="stTextInput"] input:focus,
+[data-testid="stTextArea"] textarea:focus {
+    border-color: #0A7CFF !important;
+    box-shadow: 0 0 0 1px rgba(10,124,255,0.3);
+}
+
+/* --- Dividers --- */
+hr {
+    border: none;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(10,124,255,0.2), transparent);
+    margin: 1.5rem 0;
+}
+
+/* --- Scrollbar --- */
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: #0D1117; }
+::-webkit-scrollbar-thumb { background: #30363D; border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: #484F58; }
+
+/* --- Render result card --- */
+.result-frame {
+    border: 1px solid rgba(10,124,255,0.15);
+    border-radius: 12px;
+    overflow: hidden;
+    background: linear-gradient(145deg, #161B22, #1A1F2B);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    margin-bottom: 1rem;
+}
+.result-frame:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 8px 25px rgba(10,124,255,0.12);
+    border-color: rgba(10,124,255,0.3);
+}
+.result-frame .frame-label {
+    padding: 0.6rem 1rem;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: #58A6FF;
+    letter-spacing: 0.5px;
+    border-top: 1px solid rgba(10,124,255,0.1);
+    background: rgba(10,124,255,0.04);
 }
 </style>
 """

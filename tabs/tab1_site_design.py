@@ -557,10 +557,14 @@ def render():
         for i, r in enumerate(results):
             with cols[i % 2]:
                 view_label = r.get("view_name", f"View {i + 1}")
+                st.markdown("<div class='result-frame'>", unsafe_allow_html=True)
                 st.image(
                     r["image_bytes"],
-                    caption=view_label,
                     use_container_width=True,
+                )
+                st.markdown(
+                    f"<div class='frame-label'>{view_label}</div></div>",
+                    unsafe_allow_html=True,
                 )
                 if r.get("text"):
                     st.caption(r["text"])

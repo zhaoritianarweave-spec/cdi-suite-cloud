@@ -1,8 +1,11 @@
 """Supabase authentication for CDI Suite Cloud."""
 
 import streamlit as st
+from pathlib import Path
 from supabase import create_client, Client
 from utils.i18n import t, t_fmt
+
+_ASSETS_UI = Path(__file__).resolve().parent.parent / "assets" / "ui"
 
 
 def _get_supabase() -> Client:
@@ -101,10 +104,12 @@ def render_auth_page():
 
     _render_lang_toggle()
 
-    # --- Hero Section ---
+    # --- Hero Image + Title ---
+    st.image(str(_ASSETS_UI / "hero.png"), use_container_width=True)
+
     st.markdown(
         f"""
-        <div style="text-align:center; padding:2.5rem 0 0.5rem 0;">
+        <div style="text-align:center; padding:1rem 0 0.5rem 0;">
             <h1 style="font-size:2.6rem; font-weight:700; letter-spacing:2px;
                 background:linear-gradient(135deg,#0A7CFF,#00D4AA);
                 -webkit-background-clip:text; -webkit-text-fill-color:transparent;
@@ -122,42 +127,39 @@ def render_auth_page():
         unsafe_allow_html=True,
     )
 
-    # --- Feature Cards ---
+    # --- Feature Cards with Images ---
     st.markdown("<div style='height:0.5rem'></div>", unsafe_allow_html=True)
     f1, f2, f3 = st.columns(3)
-    _card_css = (
-        "background:linear-gradient(145deg,#161B22,#1C2333); border:1px solid #30363D; "
-        "border-radius:12px; padding:1.3rem 1rem; text-align:center; min-height:180px;"
-    )
+
     with f1:
+        st.image(str(_ASSETS_UI / "site_renderer.png"), use_container_width=True)
         st.markdown(
-            f"<div style='{_card_css}'>"
-            "<div style='font-size:2rem; margin-bottom:0.4rem;'>&#127960;</div>"
-            f"<h4 style='color:#58A6FF; margin:0 0 0.4rem 0; font-size:0.95rem;'>{t('feat_renderer_title')}</h4>"
+            f"<div style='text-align:center; padding:0.5rem 0;'>"
+            f"<h4 style='color:#58A6FF; margin:0 0 0.3rem 0; font-size:0.95rem;'>{t('feat_renderer_title')}</h4>"
             f"<p style='color:#8B949E; font-size:0.8rem; line-height:1.4;'>{t('feat_renderer_desc')}</p>"
-            "</div>",
+            f"</div>",
             unsafe_allow_html=True,
         )
     with f2:
+        st.image(str(_ASSETS_UI / "drawing_analyser.png"), use_container_width=True)
         st.markdown(
-            f"<div style='{_card_css}'>"
-            "<div style='font-size:2rem; margin-bottom:0.4rem;'>&#128209;</div>"
-            f"<h4 style='color:#58A6FF; margin:0 0 0.4rem 0; font-size:0.95rem;'>{t('feat_analyser_title')}</h4>"
+            f"<div style='text-align:center; padding:0.5rem 0;'>"
+            f"<h4 style='color:#58A6FF; margin:0 0 0.3rem 0; font-size:0.95rem;'>{t('feat_analyser_title')}</h4>"
             f"<p style='color:#8B949E; font-size:0.8rem; line-height:1.4;'>{t('feat_analyser_desc')}</p>"
-            "</div>",
+            f"</div>",
             unsafe_allow_html=True,
         )
     with f3:
+        st.image(str(_ASSETS_UI / "contract_guard.png"), use_container_width=True)
         st.markdown(
-            f"<div style='{_card_css}'>"
-            "<div style='font-size:2rem; margin-bottom:0.4rem;'>&#128220;</div>"
-            f"<h4 style='color:#58A6FF; margin:0 0 0.4rem 0; font-size:0.95rem;'>{t('feat_contract_title')}</h4>"
+            f"<div style='text-align:center; padding:0.5rem 0;'>"
+            f"<h4 style='color:#58A6FF; margin:0 0 0.3rem 0; font-size:0.95rem;'>{t('feat_contract_title')}</h4>"
             f"<p style='color:#8B949E; font-size:0.8rem; line-height:1.4;'>{t('feat_contract_desc')}</p>"
-            "</div>",
+            f"</div>",
             unsafe_allow_html=True,
         )
 
-    # --- Pricing Highlight ---
+    # --- Beta Badge ---
     st.markdown(
         f"""
         <div style="text-align:center; padding:1.2rem 0 0.3rem 0;">
