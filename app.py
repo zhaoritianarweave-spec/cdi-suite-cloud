@@ -2,7 +2,7 @@ import streamlit as st
 from pathlib import Path
 
 st.set_page_config(
-    page_title="CDI Suite — Civil Design Intelligence",
+    page_title="ArchiMind Pro",
     page_icon="\U0001f3d7\ufe0f",
     layout="wide",
     initial_sidebar_state="expanded",

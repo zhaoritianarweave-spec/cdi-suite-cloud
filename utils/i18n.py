@@ -4,11 +4,11 @@ import streamlit as st
 
 TRANSLATIONS = {
     # ── Landing page hero ──
-    "hero_title": {"en": "CIVIL DESIGN INTELLIGENCE", "zh": "土木设计智能平台"},
-    "hero_subtitle": {"en": "Powered by Civil Intelligence Large Model, based on Australian laws and regulations", "zh": "由土木智能大模型驱动，依据澳洲法律法规"},
+    "hero_title": {"en": "ARCHIMIND PRO", "zh": "ARCHIMIND PRO"},
+    "hero_subtitle": {"en": "Architecture & Engineering Intelligence Platform", "zh": "建筑与工程智能平台"},
     "hero_caption": {
-        "en": "Photorealistic renderings · Construction drawing analysis · Contract risk review — powered by Civil Intelligence Large Model",
-        "zh": "真实感渲染 · 施工图纸分析 · 合同风险审查 — 由土木智能大模型驱动",
+        "en": "Photorealistic renderings · Construction drawing analysis · Contract risk review — based on Australian laws and regulations",
+        "zh": "真实感渲染 · 施工图纸分析 · 合同风险审查 — 依据澳洲法律法规",
     },
     # ── Landing feature cards ──
     "feat_renderer_title": {"en": "Site Renderer", "zh": "场地渲染器"},
@@ -56,18 +56,18 @@ TRANSLATIONS = {
     "msg_reset_sent": {"en": "Password reset email sent! Check your inbox.", "zh": "密码重置邮件已发送，请查收！"},
     "err_enter_email": {"en": "Please enter your email.", "zh": "请输入邮箱。"},
     "auth_footer": {
-        "en": "CDI Suite v1.0 · Powered by Civil Intelligence Large Model",
-        "zh": "CDI Suite v1.0 · 由土木智能大模型驱动",
+        "en": "ArchiMind Pro v1.0",
+        "zh": "ArchiMind Pro v1.0",
     },
     # ── Header ──
-    "header_title": {"en": "CIVIL DESIGN INTELLIGENCE", "zh": "土木设计智能"},
+    "header_title": {"en": "ARCHIMIND PRO", "zh": "ARCHIMIND PRO"},
     "header_subtitle": {"en": "Architecture · Engineering · Visualisation", "zh": "建筑 · 工程 · 可视化"},
-    "header_badge": {"en": "POWERED BY CIVIL INTELLIGENCE LARGE MODEL", "zh": "由土木智能大模型驱动"},
+    "header_badge": {"en": "ARCHITECTURE & ENGINEERING INTELLIGENCE", "zh": "建筑与工程智能"},
     # ── Sidebar ──
-    "sidebar_brand": {"en": "CDI SUITE", "zh": "CDI SUITE"},
-    "sidebar_brand_sub": {"en": "Civil Design Intelligence", "zh": "土木设计智能"},
-    "sidebar_footer_line1": {"en": "Civil Design Intelligence Suite v1.0", "zh": "Civil Design Intelligence Suite v1.0"},
-    "sidebar_footer_line2": {"en": "Powered by Civil Intelligence Large Model", "zh": "由土木智能大模型驱动"},
+    "sidebar_brand": {"en": "ARCHIMIND PRO", "zh": "ARCHIMIND PRO"},
+    "sidebar_brand_sub": {"en": "Architecture & Engineering Intelligence", "zh": "建筑与工程智能"},
+    "sidebar_footer_line1": {"en": "ArchiMind Pro v1.0", "zh": "ArchiMind Pro v1.0"},
+    "sidebar_footer_line2": {"en": "Architecture & Engineering Intelligence", "zh": "建筑与工程智能"},
     "plan_label": {"en": "{name} Plan", "zh": "{name} 计划"},
     "usage_label": {"en": "Usage: {used} / {limit} this month", "zh": "用量：本月 {used} / {limit}"},
     "free_quota_reached": {"en": "Free quota reached", "zh": "免费额度已用完"},
@@ -89,8 +89,8 @@ TRANSLATIONS = {
     # ── Tab1: Site Renderer ──
     "t1_title": {"en": "Site Intelligence Renderer", "zh": "场地智能渲染器"},
     "t1_caption": {
-        "en": "Upload a site photograph — Civil Intelligence Large Model analyses existing conditions and produces multi-angle photorealistic renderings with design consistency across all viewpoints.",
-        "zh": "上传场地照片 — 土木智能大模型分析现有条件，生成多角度真实感渲染图，所有视角保持设计一致性。",
+        "en": "Upload a site photograph — ArchiMind Pro analyses existing conditions and produces multi-angle photorealistic renderings with design consistency across all viewpoints.",
+        "zh": "上传场地照片 — ArchiMind Pro 分析现有条件，生成多角度真实感渲染图，所有视角保持设计一致性。",
     },
     "t1_site_photo": {"en": "Site Photograph", "zh": "场地照片"},
     "t1_upload": {"en": "Upload a site photo", "zh": "上传场地照片"},
@@ -113,8 +113,8 @@ TRANSLATIONS = {
     "t1_download": {"en": "Download {label}", "zh": "下载 {label}"},
     "t1_video_title": {"en": "Cinematic Flyover Video", "zh": "电影级飞越视频"},
     "t1_video_caption": {
-        "en": "Generate an 8-second cinematic fly-around video from the aerial rendering using Civil Intelligence Large Model.",
-        "zh": "使用土木智能大模型从鸟瞰渲染图生成8秒电影级环绕飞越视频。",
+        "en": "Generate an 8-second cinematic fly-around video from the aerial rendering using ArchiMind Pro.",
+        "zh": "使用 ArchiMind Pro 从鸟瞰渲染图生成8秒电影级环绕飞越视频。",
     },
     "t1_video_btn": {"en": "🎬 Generate Flyover Video", "zh": "🎬 生成飞越视频"},
     "t1_video_ready": {"en": "✓ VIDEO READY | Cinematic flyover delivered", "zh": "✓ 视频就绪 | 电影级飞越已交付"},
@@ -157,8 +157,8 @@ TRANSLATIONS = {
     # ── Tab2: Drawing Analyser ──
     "t2_title": {"en": "Drawing Intelligence & Quantity Take-Off", "zh": "图纸智能分析与工程量提取"},
     "t2_caption": {
-        "en": "Upload a construction drawing — Civil Intelligence Large Model reads annotations, extracts quantities, detects discrepancies and checks compliance based on Australian laws and regulations.",
-        "zh": "上传施工图纸 — 土木智能大模型自动读取标注、提取工程量、检测差异，依据澳洲法律法规进行合规检查。",
+        "en": "Upload a construction drawing — ArchiMind Pro reads annotations, extracts quantities, detects discrepancies and checks compliance based on Australian laws and regulations.",
+        "zh": "上传施工图纸 — ArchiMind Pro 自动读取标注、提取工程量、检测差异，依据澳洲法律法规进行合规检查。",
     },
     "t2_drawing": {"en": "Construction Drawing", "zh": "施工图纸"},
     "t2_upload": {"en": "Upload a drawing", "zh": "上传图纸"},
@@ -201,8 +201,8 @@ TRANSLATIONS = {
     # ── Tab4: ContractGuard ──
     "t4_title": {"en": "ContractGuard — Clause Risk Analyser", "zh": "合同卫士 — 条款风险分析器"},
     "t4_caption": {
-        "en": "Upload a construction contract — Civil Intelligence Large Model checks Australian legislation compliance, identifies unfair terms, benchmarks financial provisions and generates a comprehensive risk report.",
-        "zh": "上传施工合同 — 土木智能大模型检查澳洲法律法规合规性、识别不公平条款、对标财务条款并生成综合风险报告。",
+        "en": "Upload a construction contract — ArchiMind Pro checks Australian legislation compliance, identifies unfair terms, benchmarks financial provisions and generates a comprehensive risk report.",
+        "zh": "上传施工合同 — ArchiMind Pro 检查澳洲法律法规合规性、识别不公平条款、对标财务条款并生成综合风险报告。",
     },
     "t4_documents": {"en": "Contract Documents", "zh": "合同文件"},
     "t4_upload": {"en": "Upload contract documents", "zh": "上传合同文件"},

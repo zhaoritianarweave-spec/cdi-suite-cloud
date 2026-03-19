@@ -1,4 +1,4 @@
-"""Email notification service for CDI Suite Cloud using Resend."""
+"""Email notification service for ArchiMind Pro using Resend."""
 
 import streamlit as st
 import requests
@@ -15,9 +15,9 @@ def _get_resend_key() -> str | None:
 def _get_from_address() -> str:
     """Get the sender email address."""
     try:
-        return st.secrets.get("EMAIL_FROM", "CDI Suite <onboarding@resend.dev>")
+        return st.secrets.get("EMAIL_FROM", "ArchiMind Pro <onboarding@resend.dev>")
     except Exception:
-        return "CDI Suite <onboarding@resend.dev>"
+        return "ArchiMind Pro <onboarding@resend.dev>"
 
 
 def _send_email(to: str, subject: str, html: str) -> bool:
@@ -49,25 +49,25 @@ def _send_email(to: str, subject: str, html: str) -> bool:
 
 def send_welcome_email(email: str) -> bool:
     """Send a welcome email to a newly registered user."""
-    subject = "Welcome to CDI Suite — Civil Design Intelligence"
+    subject = "Welcome to ArchiMind Pro"
     html = """
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#0D1117;color:#E6EDF3;padding:2rem;border-radius:12px;">
         <div style="text-align:center;margin-bottom:1.5rem;">
             <h1 style="background:linear-gradient(135deg,#0A7CFF,#00D4AA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:1.8rem;margin:0;">
-                CDI SUITE
+                ARCHIMIND PRO
             </h1>
-            <p style="color:#8B949E;font-size:0.9rem;margin-top:4px;">Civil Design Intelligence Platform</p>
+            <p style="color:#8B949E;font-size:0.9rem;margin-top:4px;">Architecture & Engineering Intelligence</p>
         </div>
 
         <h2 style="color:#E6EDF3;font-size:1.3rem;">Welcome aboard! 🎉</h2>
 
         <p style="color:#C9D1D9;line-height:1.6;">
-            Thank you for joining CDI Suite. You now have access to our AI-powered tools for architecture and civil engineering:
+            Thank you for joining ArchiMind Pro. You now have access to our intelligent tools for architecture and civil engineering:
         </p>
 
         <ul style="color:#C9D1D9;line-height:1.8;">
             <li><strong style="color:#58A6FF;">Site Renderer</strong> — Generate photorealistic renderings from site photos</li>
-            <li><strong style="color:#58A6FF;">Drawing Analyser</strong> — AI-driven quantity takeoff and compliance checks</li>
+            <li><strong style="color:#58A6FF;">Drawing Analyser</strong> — Intelligent quantity takeoff and compliance checks</li>
             <li><strong style="color:#58A6FF;">ContractGuard</strong> — Instant contract risk analysis</li>
         </ul>
 
@@ -78,13 +78,13 @@ def send_welcome_email(email: str) -> bool:
         <div style="text-align:center;margin:2rem 0;">
             <a href="https://cdi-suite-cloud-f3svb9i29ma9kpwxgtdc6l.streamlit.app"
                style="background:linear-gradient(135deg,#0A7CFF,#0062CC);color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;">
-                Open CDI Suite →
+                Open ArchiMind Pro →
             </a>
         </div>
 
         <hr style="border:none;border-top:1px solid #30363D;margin:1.5rem 0;">
         <p style="color:#484F58;font-size:0.75rem;text-align:center;">
-            CDI Suite v1.0 · Powered by Civil Intelligence Large Model
+            ArchiMind Pro v1.0
         </p>
     </div>
     """
@@ -94,12 +94,12 @@ def send_welcome_email(email: str) -> bool:
 def send_usage_warning_email(email: str, used: int, limit: int) -> bool:
     """Send a warning when user reaches 80% of their quota."""
     remaining = limit - used
-    subject = f"CDI Suite — You have {remaining} analysis left this month"
+    subject = f"ArchiMind Pro — You have {remaining} analysis left this month"
     html = f"""
     <div style="font-family:Arial,sans-serif;max-width:600px;margin:0 auto;background:#0D1117;color:#E6EDF3;padding:2rem;border-radius:12px;">
         <div style="text-align:center;margin-bottom:1.5rem;">
             <h1 style="background:linear-gradient(135deg,#0A7CFF,#00D4AA);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-size:1.8rem;margin:0;">
-                CDI SUITE
+                ARCHIMIND PRO
             </h1>
         </div>
 
@@ -119,13 +119,13 @@ def send_usage_warning_email(email: str, used: int, limit: int) -> bool:
         <div style="text-align:center;margin:2rem 0;">
             <a href="https://cdi-suite-cloud-f3svb9i29ma9kpwxgtdc6l.streamlit.app"
                style="background:linear-gradient(135deg,#0A7CFF,#0062CC);color:#fff;padding:12px 28px;border-radius:8px;text-decoration:none;font-weight:600;font-size:0.95rem;">
-                Open CDI Suite →
+                Open ArchiMind Pro →
             </a>
         </div>
 
         <hr style="border:none;border-top:1px solid #30363D;margin:1.5rem 0;">
         <p style="color:#484F58;font-size:0.75rem;text-align:center;">
-            CDI Suite v1.0 · Powered by Civil Intelligence Large Model
+            ArchiMind Pro v1.0
         </p>
     </div>
     """

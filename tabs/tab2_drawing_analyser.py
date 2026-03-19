@@ -294,7 +294,7 @@ def render():
             _render_progress(pct, msg)
             time.sleep(0.5)
 
-        _render_progress(65, "Waiting for Civil Intelligence Large Model response...")
+        _render_progress(65, "Waiting for ArchiMind Pro response...")
 
         # API call
         result_text = gemini_client.analyse_image(
@@ -561,7 +561,7 @@ def _generate_qto_excel(text: str) -> bytes | None:
 
         # Title row above table
         ws.insert_rows(1)
-        title_cell = ws.cell(row=1, column=1, value="CDI Suite — Quantity Take-Off Report")
+        title_cell = ws.cell(row=1, column=1, value="ArchiMind Pro — Quantity Take-Off Report")
         title_cell.font = Font(bold=True, size=14, color="0A7CFF")
 
         buf = BytesIO()
