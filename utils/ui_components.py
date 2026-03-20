@@ -17,6 +17,15 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: 0.3px;
 }
 
+/* --- Hide Streamlit Cloud "Manage app" button --- */
+[data-testid="manage-app-button"] {
+    display: none !important;
+}
+.viewerBadge_container__r5tak,
+.stDeployButton {
+    display: none !important;
+}
+
 /* --- Blueprint grid overlay on main area --- */
 [data-testid="stMainBlockContainer"] {
     background-image:
