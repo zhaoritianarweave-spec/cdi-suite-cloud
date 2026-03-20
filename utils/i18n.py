@@ -66,6 +66,8 @@ TRANSLATIONS = {
     # ── Sidebar ──
     "sidebar_brand": {"en": "ARCHIMIND PRO", "zh": "ARCHIMIND PRO"},
     "sidebar_brand_sub": {"en": "Architecture & Engineering Intelligence", "zh": "建筑与工程智能"},
+    "support_button": {"en": "Developer Support", "zh": "开发者支持"},
+    "support_email_label": {"en": "Email", "zh": "邮箱"},
     "sidebar_footer_line1": {"en": "ArchiMind Pro v1.0", "zh": "ArchiMind Pro v1.0"},
     "sidebar_footer_line2": {"en": "Architecture & Engineering Intelligence", "zh": "建筑与工程智能"},
     "plan_label": {"en": "{name} Plan", "zh": "{name} 计划"},
