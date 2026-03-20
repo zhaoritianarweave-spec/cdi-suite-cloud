@@ -118,7 +118,7 @@ TRANSLATIONS = {
     },
     "t1_video_btn": {"en": "🎬 Generate Walkthrough Video", "zh": "🎬 生成环绕动画"},
     "t1_video_ready": {"en": "✓ VIDEO READY | Cinematic walkthrough delivered", "zh": "✓ 视频就绪 | 电影级环绕动画已交付"},
-    "t1_video_download": {"en": "⬇️ Download Walkthrough Video", "zh": "⬇️ 下载环绕动画"},
+    "t1_video_download": {"en": "Download Walkthrough Video", "zh": "下载环绕动画"},
     "t1_video_failed": {"en": "Video generation failed. Please try again.", "zh": "视频生成失败，请重试。"},
     "t1_progress_warmup": {"en": "Warming up engine...", "zh": "引擎预热中..."},
     # Project types
@@ -181,8 +181,8 @@ TRANSLATIONS = {
     "t2_no_compliance": {"en": "No compliance observations.", "zh": "无合规观察结果。"},
     "t2_no_constructability": {"en": "No constructability notes.", "zh": "无可施工性备注。"},
     "t2_no_cost": {"en": "No cost indicators generated.", "zh": "未生成成本指标。"},
-    "t2_download_report": {"en": "📄 Download Full Report (.md)", "zh": "📄 下载完整报告 (.md)"},
-    "t2_download_qto": {"en": "📊 Download QTO Table (.csv)", "zh": "📊 下载工程量表 (.csv)"},
+    "t2_download_report": {"en": "Download Full Report (.md)", "zh": "下载完整报告 (.md)"},
+    "t2_download_qto": {"en": "Download QTO Table (.csv)", "zh": "下载工程量表 (.csv)"},
     "t2_complete": {"en": "✓ ANALYSIS COMPLETE | Full report delivered", "zh": "✓ 分析完成 | 完整报告已交付"},
     # Tab2 focus options
     "af_qto": {"en": "📊 Quantity Take-off (QTO)", "zh": "📊 工程量提取 (QTO)"},
@@ -223,8 +223,8 @@ TRANSLATIONS = {
     "t4_no_findings": {"en": "No findings to display.", "zh": "暂无发现。"},
     "t4_recommendation": {"en": "Recommendation:", "zh": "建议："},
     "t4_benchmark": {"en": "Market Benchmark:", "zh": "市场基准："},
-    "t4_download_report": {"en": "📄 Download Full Report (.html)", "zh": "📄 下载完整报告 (.html)"},
-    "t4_download_json": {"en": "📊 Download Raw Data (.json)", "zh": "📊 下载原始数据 (.json)"},
+    "t4_download_report": {"en": "Download Full Report (.html)", "zh": "下载完整报告 (.html)"},
+    "t4_download_json": {"en": "Download Raw Data (.json)", "zh": "下载原始数据 (.json)"},
     "t4_complete": {"en": "✓ ANALYSIS COMPLETE | Risk assessment delivered", "zh": "✓ 分析完成 | 风险评估已交付"},
     "t4_analysis_failed": {"en": "Analysis failed. Please check your document and retry.", "zh": "分析失败，请检查文件后重试。"},
     # Tab4 risk categories

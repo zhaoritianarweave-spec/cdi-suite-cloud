@@ -554,9 +554,11 @@ def render():
                 if r.get("text"):
                     st.caption(r["text"])
 
-                safe_name = view_label.replace(" ", "_").replace("/", "_").lower()
+                import re as _re
+                _clean_label = _re.sub(r'^[\U0001f000-\U0001ffff\u2600-\u27bf\ufe0f\u200d]+\s*', '', view_label)
+                safe_name = _clean_label.replace(" ", "_").replace("/", "_").lower()
                 st.download_button(
-                    label=t_fmt("t1_download", label=view_label),
+                    label=t_fmt("t1_download", label=_clean_label),
                     data=r["image_bytes"],
                     file_name=f"design_{safe_name}.png",
                     mime="image/png",
@@ -573,7 +575,7 @@ def render():
                         name = r.get("view_name", f"view_{i+1}").replace(" ", "_").replace("/", "_").lower()
                         zf.writestr(f"design_{name}.png", r["image_bytes"])
                 st.download_button(
-                    label="📦 Download All (.zip)" if t("log_in") != "登录" else "📦 打包下载全部",
+                    label="Download All (.zip)" if t("log_in") != "登录" else "打包下载全部",
                     data=zip_buf.getvalue(),
                     file_name="cdi_renderings.zip",
                     mime="application/zip",
