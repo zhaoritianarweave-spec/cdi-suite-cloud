@@ -17,14 +17,16 @@ h1, h2, h3, h4, h5, h6 {
     letter-spacing: 0.3px;
 }
 
-/* --- Hide Streamlit Cloud "Manage app" button --- */
-[data-testid="manage-app-button"] {
-    display: none !important;
-}
-.viewerBadge_container__r5tak,
-.stDeployButton {
-    display: none !important;
-}
+/* --- Hide Streamlit Cloud UI elements --- */
+#MainMenu {visibility: hidden !important;}
+header {visibility: hidden !important;}
+footer {visibility: hidden !important;}
+[data-testid="manage-app-button"] {display: none !important;}
+[data-testid="stStatusWidget"] {display: none !important;}
+.viewerBadge_container__r5tak {display: none !important;}
+.stDeployButton {display: none !important;}
+.styles_viewerBadge__CvC9N {display: none !important;}
+[data-testid="stToolbar"] {display: none !important;}
 
 /* --- Blueprint grid overlay on main area --- */
 [data-testid="stMainBlockContainer"] {
