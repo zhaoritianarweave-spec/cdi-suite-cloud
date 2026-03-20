@@ -28,6 +28,14 @@ footer {visibility: hidden !important;}
 .styles_viewerBadge__CvC9N {display: none !important;}
 [data-testid="stToolbar"] {display: none !important;}
 
+/* --- Hide bottom-right floating widgets --- */
+iframe[src*="streamlit"],
+div[class*="badge"],
+div[style*="position: fixed"][style*="bottom"],
+div[style*="position:fixed"][style*="bottom"] {
+    display: none !important;
+}
+
 /* --- Blueprint grid overlay on main area --- */
 [data-testid="stMainBlockContainer"] {
     background-image:
