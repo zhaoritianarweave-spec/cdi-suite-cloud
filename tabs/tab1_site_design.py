@@ -95,25 +95,30 @@ def _build_followup_prompt(
     is_front = "front" in view_name.lower() or "elevation" in view_name.lower()
 
     if is_rear:
-        consistency_block = """CRITICAL — the new rendering MUST match the SAME building visible in the aerial view, but seen from GROUND LEVEL in the BACKYARD:
-- Same roof form, same facade materials, same colour palette, same number of storeys as the aerial image
-- The camera is now in the BACKYARD looking at the REAR WALL of the building
-- Show the BACK of the house: rear sliding doors, alfresco area, deck/patio, pool (if visible in aerial), backyard lawn
-- The backyard layout (pool position, landscaping, fencing) must match what is visible in the aerial reference
-- DO NOT show the front door, front porch, front driveway or street — those are on the opposite side
-- This is a completely different scene from the front — only the building structure is the same"""
+        consistency_block = """CRITICAL DESIGN CONSISTENCY — the new rendering MUST depict the IDENTICAL building from the aerial reference, viewed from GROUND LEVEL in the BACKYARD:
+- MUST MATCH: exact roof form (hip/gable/flat), exact facade materials (brick/render/timber/stone), exact colour palette, exact storey count, exact window proportions and placement
+- MUST MATCH: building footprint shape, wing layout, and massing as visible from above
+- The camera is positioned in the BACKYARD at eye-level (~1.6m), looking at the REAR ELEVATION of the building
+- Show: rear sliding doors / bifold doors, alfresco/patio area, deck, pool (if present in aerial), backyard lawn and landscaping
+- The backyard layout (pool position relative to house, garden beds, fencing, paths) must be geometrically consistent with the aerial plan view
+- DO NOT show the front door, front porch, driveway or street — those are on the opposite side
+- Maintain the same time of day, lighting direction, and weather conditions as the aerial reference"""
     elif is_front:
-        consistency_block = """CRITICAL — the new rendering MUST match the SAME building visible in the aerial view, but seen from GROUND LEVEL at the FRONT:
-- Same roof form, same facade materials, same colour palette, same number of storeys as the aerial image
-- The camera is now at eye-level in front of the house, tightly framed on the facade
-- Show the FRONT of the house: front door, porch, garage doors, facade materials
-- The front yard layout (driveway, garage position, front landscaping) must match what is visible in the aerial reference
-- Close-up shot — do NOT show distant surroundings or full street context"""
+        consistency_block = """CRITICAL DESIGN CONSISTENCY — the new rendering MUST depict the IDENTICAL building from the aerial reference, viewed from GROUND LEVEL at the FRONT:
+- MUST MATCH: exact roof form (hip/gable/flat), exact facade materials (brick/render/timber/stone), exact colour palette, exact storey count, exact window proportions and placement
+- MUST MATCH: building footprint shape, garage position (left/right/centre), and entry location as visible from above
+- The camera is at eye-level (~1.6m) on the street, tightly framed on the front facade
+- Show: front door, entry portico/porch, garage door(s), facade material detail, front landscaping
+- The front yard layout (driveway width and position, garden beds, paths, mailbox) must be geometrically consistent with the aerial plan view
+- Close-up architectural shot — do NOT show distant surroundings or full street context
+- Maintain the same time of day, lighting direction, and weather conditions as the aerial reference"""
     else:
-        consistency_block = """CRITICAL — the new rendering MUST match the SAME building visible in the aerial view:
-- Same roof form, same facade materials, same colour palette, same number of storeys as the aerial image
-- Same site layout, landscaping and features where visible from this angle
-- Only the camera angle / perspective changes"""
+        consistency_block = """CRITICAL DESIGN CONSISTENCY — the new rendering MUST depict the IDENTICAL building from the aerial reference:
+- MUST MATCH: exact roof form (hip/gable/flat), exact facade materials (brick/render/timber/stone), exact colour palette, exact storey count, exact window proportions and placement
+- MUST MATCH: building footprint shape, wing layout, and massing as visible from above
+- Same site layout, landscaping, driveways, pools, and features — geometrically consistent with the aerial plan
+- Only the camera angle / perspective changes
+- Maintain the same time of day, lighting direction, and weather conditions as the aerial reference"""
 
     return f"""I'm providing two images:
 1. The original site photo (first image)
@@ -297,24 +302,7 @@ def render():
             mime_type = uploaded.type or "image/jpeg"
             st.image(image_bytes, caption="Site Input", use_container_width=True)
 
-        demo_photos = _get_demo_photos()
-        if demo_photos:
-            st.markdown(
-                f"<span style='color:#8B949E;font-size:0.8rem;'>{t('t1_demo_label')}</span>",
-                unsafe_allow_html=True,
-            )
-            demo_cols = st.columns(len(demo_photos))
-            for i, photo in enumerate(demo_photos):
-                with demo_cols[i]:
-                    if st.button(photo.stem, key=f"demo_photo_{i}", use_container_width=True):
-                        st.session_state["tab1_demo_photo"] = str(photo)
-
-            if "tab1_demo_photo" in st.session_state:
-                demo_path = pathlib.Path(st.session_state["tab1_demo_photo"])
-                if demo_path.exists():
-                    image_bytes = demo_path.read_bytes()
-                    mime_type = "image/png" if demo_path.suffix.lower() == ".png" else "image/jpeg"
-                    st.image(image_bytes, caption=f"Demo — {demo_path.stem}", use_container_width=True)
+        # Demo photos removed — users upload their own site photos
 
     with col_right:
         st.markdown(f"##### {t('t1_design_params')}")
