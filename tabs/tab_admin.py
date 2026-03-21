@@ -153,7 +153,7 @@ def render():
         sub = subs.get(uid, {})
         plan = sub.get("plan", "free")
         used = usage.get(uid, 0)
-        plan_limit = 25 if plan == "pro" else 3
+        plan_limit = 50 if plan == "pro" else 3
 
         col_email, col_date, col_plan, col_usage, col_action = st.columns([3, 2, 1.5, 1.5, 2])
 

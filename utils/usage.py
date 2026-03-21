@@ -7,7 +7,7 @@ from datetime import datetime, timezone
 # Plan limits (monthly API calls)
 PLAN_LIMITS = {
     "free": 3,
-    "pro": 25,
+    "pro": 50,
     "enterprise": 999999,  # effectively unlimited
 }
 
