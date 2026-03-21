@@ -10,7 +10,7 @@ st.set_page_config(
 
 from utils.ui_components import inject_css
 from utils.auth import render_auth_page
-from utils.i18n import t, get_region
+from utils.i18n import t
 
 inject_css()
 
@@ -76,6 +76,7 @@ for col, (key, title_key, desc_key, img_file) in zip(cols, _MODULES):
         bg = "rgba(10,124,255,0.06)" if is_active else "transparent"
 
         # Region-specific image for ContractGuard
+        from utils.i18n import get_region
         if key == "contract_guard" and get_region() == "cn":
             _cn_path = _ASSETS_UI / "contract_guard_cn.png"
             img_path = _cn_path if _cn_path.exists() else _ASSETS_UI / img_file
