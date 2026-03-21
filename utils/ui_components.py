@@ -24,7 +24,6 @@ h1, h2, h3, h4, h5, h6 {
 .stDeployButton {display: none !important;}
 .styles_viewerBadge__CvC9N {display: none !important;}
 [data-testid="stToolbar"] {display: none !important;}
-#MainMenu {visibility: hidden !important;}
 
 /* --- Blueprint grid overlay on main area --- */
 [data-testid="stMainBlockContainer"] {
