@@ -90,14 +90,20 @@ def _render_lang_toggle():
     """Render a compact language + region toggle at the top-right of the page."""
     _, region_col, lang_col = st.columns([5, 1, 1])
     with region_col:
-        regions = ["Australia", "China"]
+        regions = ["Australia", "中国"]
         cur_r = 1 if st.session_state.get("region") == "cn" else 0
-        region_choice = st.selectbox("🌏", regions, index=cur_r, key="region_select_auth", label_visibility="collapsed")
-        st.session_state["region"] = "cn" if region_choice == "China" else "au"
+        region_choice = st.selectbox("Regional/地区", regions, index=cur_r, key="region_select_auth")
+        new_region = "cn" if region_choice == "中国" else "au"
+        # Auto-switch language when region changes
+        if new_region != st.session_state.get("region"):
+            st.session_state["region"] = new_region
+            st.session_state["lang"] = "zh" if new_region == "cn" else "en"
+            st.rerun()
+        st.session_state["region"] = new_region
     with lang_col:
         langs = ["English", "中文"]
         cur = 1 if st.session_state.get("lang") == "zh" else 0
-        choice = st.selectbox("🌐", langs, index=cur, key="lang_select_auth", label_visibility="collapsed")
+        choice = st.selectbox("Language/语言", langs, index=cur, key="lang_select_auth")
         st.session_state["lang"] = "zh" if choice == "中文" else "en"
 
 
