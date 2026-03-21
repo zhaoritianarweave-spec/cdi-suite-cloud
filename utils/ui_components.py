@@ -397,7 +397,7 @@ def render_sidebar():
             st.markdown(f"[{user['email']}](mailto:{user['email']})")
 
             # Plan badge
-            badge_color = {"free": "#8B949E", "pro": "#0A7CFF", "enterprise": "#00D4AA"}.get(plan, "#8B949E")
+            badge_color = {"free": "#8B949E", "pro": "#0A7CFF", "max": "#FFB800", "enterprise": "#00D4AA"}.get(plan, "#8B949E")
             st.markdown(
                 f"<span style='background:{badge_color}22;color:{badge_color};"
                 f"padding:2px 10px;border-radius:10px;font-size:0.75rem;"
@@ -428,13 +428,13 @@ def render_sidebar():
                 if plan == "free":
                     billing = st.radio(
                         "Billing",
-                        [t("billing_monthly"), t("billing_annual")],
+                        [t("billing_monthly_pro"), t("billing_annual_pro")],
                         index=1,
                         key="billing_interval",
                         label_visibility="collapsed",
                     )
-                    interval = "annual" if "69" in billing else "monthly"
-                    price_label = "A$69/mo" if interval == "annual" else "A$99/mo"
+                    interval = "annual" if "50%" in billing else "monthly"
+                    price_label = "A$49/mo" if interval == "annual" else "A$99/mo"
 
                     if st.button(t_fmt("upgrade_btn", price=price_label), use_container_width=True, type="primary"):
                         url = create_checkout_session(user["id"], user["email"], "pro", interval)
@@ -445,6 +445,36 @@ def render_sidebar():
                             )
                             st.info(t("redirecting_checkout"))
                             st.stop()
+                elif plan == "pro":
+                    billing_max = st.radio(
+                        "Billing",
+                        [t("billing_monthly_max"), t("billing_annual_max")],
+                        index=1,
+                        key="billing_interval_max",
+                        label_visibility="collapsed",
+                    )
+                    interval = "annual" if "50%" in billing_max else "monthly"
+                    price_label = "A$99/mo" if interval == "annual" else "A$199/mo"
+
+                    if st.button(t_fmt("upgrade_max_btn", price=price_label), use_container_width=True, type="primary"):
+                        url = create_checkout_session(user["id"], user["email"], "max", interval)
+                        if url:
+                            st.markdown(
+                                f'<meta http-equiv="refresh" content="0;url={url}">',
+                                unsafe_allow_html=True,
+                            )
+                            st.info(t("redirecting_checkout"))
+                            st.stop()
+
+                    portal_url = create_customer_portal_url(user["id"])
+                    if portal_url:
+                        st.markdown(
+                            f"<a href='{portal_url}' target='_blank' style='"
+                            f"display:block;text-align:center;padding:8px;border-radius:6px;"
+                            f"border:1px solid #30363D;color:#E6EDF3;text-decoration:none;"
+                            f"font-size:0.85rem;'>{t('manage_subscription')}</a>",
+                            unsafe_allow_html=True,
+                        )
                 else:
                     portal_url = create_customer_portal_url(user["id"])
                     if portal_url:

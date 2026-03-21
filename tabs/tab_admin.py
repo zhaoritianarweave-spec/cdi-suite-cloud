@@ -130,7 +130,8 @@ def render():
     # Stats
     total = len(users)
     pro_count = sum(1 for s in subs.values() if s.get("plan") == "pro")
-    st.markdown(f"**{t_fmt('admin_stats', total=total, pro=pro_count)}**")
+    max_count = sum(1 for s in subs.values() if s.get("plan") == "max")
+    st.markdown(f"**{t_fmt('admin_stats', total=total, pro=pro_count, max=max_count)}**")
 
     # Feedback summary
     if feedback_stats:
@@ -153,7 +154,7 @@ def render():
         sub = subs.get(uid, {})
         plan = sub.get("plan", "free")
         used = usage.get(uid, 0)
-        plan_limit = 50 if plan == "pro" else 3
+        plan_limit = {"pro": 50, "max": 200, "enterprise": 999999}.get(plan, 3)
 
         col_email, col_date, col_plan, col_usage, col_action = st.columns([3, 2, 1.5, 1.5, 2])
 
@@ -162,7 +163,7 @@ def render():
         with col_date:
             st.caption(created)
         with col_plan:
-            color = "#0A7CFF" if plan == "pro" else "#8B949E"
+            color = {"pro": "#0A7CFF", "max": "#FFB800", "enterprise": "#00D4AA"}.get(plan, "#8B949E")
             st.markdown(
                 f"<span style='color:{color};font-weight:600;'>{plan.upper()}</span>",
                 unsafe_allow_html=True,
@@ -170,13 +171,29 @@ def render():
         with col_usage:
             st.caption(f"{used}/{plan_limit}")
         with col_action:
-            if plan == "pro":
+            if plan == "free":
+                col_a, col_b = st.columns(2)
+                with col_a:
+                    if st.button(t("admin_upgrade_pro"), key=f"up_pro_{uid}"):
+                        if _set_user_plan(admin_client, uid, "pro"):
+                            st.rerun()
+                with col_b:
+                    if st.button(t("admin_upgrade_max"), key=f"up_max_{uid}"):
+                        if _set_user_plan(admin_client, uid, "max"):
+                            st.rerun()
+            elif plan == "pro":
+                col_a, col_b = st.columns(2)
+                with col_a:
+                    if st.button(t("admin_upgrade_max"), key=f"up_max_{uid}"):
+                        if _set_user_plan(admin_client, uid, "max"):
+                            st.rerun()
+                with col_b:
+                    if st.button(t("admin_downgrade"), key=f"down_{uid}"):
+                        if _set_user_plan(admin_client, uid, "free"):
+                            st.rerun()
+            elif plan == "max":
                 if st.button(t("admin_downgrade"), key=f"down_{uid}"):
                     if _set_user_plan(admin_client, uid, "free"):
-                        st.rerun()
-            else:
-                if st.button(t("admin_upgrade"), key=f"up_{uid}"):
-                    if _set_user_plan(admin_client, uid, "pro"):
                         st.rerun()
 
 

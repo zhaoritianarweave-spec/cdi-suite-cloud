@@ -12,7 +12,8 @@ import stripe
 # Plan configuration
 PLANS = {
     "free": {"name": "Free", "price": 0, "limit": 3, "price_id": None},
-    "pro": {"name": "Pro", "price": 99, "price_annual": 69, "limit": 50, "currency": "AUD", "price_id": None},
+    "pro": {"name": "Pro", "price": 99, "price_annual": 49, "limit": 50, "currency": "AUD", "price_id": None},
+    "max": {"name": "Max", "price": 199, "price_annual": 99, "limit": 200, "currency": "AUD", "price_id": None},
     "enterprise": {"name": "Enterprise", "price": None, "limit": 999999, "price_id": None},
 }
 
@@ -34,6 +35,14 @@ def _get_price_ids() -> dict:
         pass
     try:
         ids["pro_annual"] = st.secrets["STRIPE_PRO_ANNUAL_PRICE_ID"]
+    except (KeyError, FileNotFoundError):
+        pass
+    try:
+        ids["max_monthly"] = st.secrets["STRIPE_MAX_MONTHLY_PRICE_ID"]
+    except (KeyError, FileNotFoundError):
+        pass
+    try:
+        ids["max_annual"] = st.secrets["STRIPE_MAX_ANNUAL_PRICE_ID"]
     except (KeyError, FileNotFoundError):
         pass
     return ids

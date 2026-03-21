@@ -22,7 +22,7 @@ Python + Streamlit + Supabase (Auth + PostgreSQL) + Google Gemini (3.1 Pro/Flash
 - `utils/auth.py` — Supabase auth + landing page
 - `utils/gemini_client.py` — Gemini API wrapper
 - `utils/stripe_client.py` — Stripe checkout + portal
-- `utils/usage.py` — Quota management (Free:3, Pro:50, Enterprise:unlimited)
+- `utils/usage.py` — Quota management (Free:3, Pro:50, Max:200, Enterprise:unlimited)
 - `utils/email_service.py` — Resend welcome + usage warning emails
 - `utils/history.py` — Analysis history (Supabase)
 - `utils/feedback.py` — User feedback (thumbs up/down)
