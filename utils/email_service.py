@@ -72,7 +72,7 @@ def send_welcome_email(email: str) -> bool:
         </ul>
 
         <p style="color:#C9D1D9;line-height:1.6;">
-            Your free plan includes <strong>3 analyses per month</strong>. Upgrade to Pro for 25 analyses/month.
+            Your free plan includes <strong>3 analyses per month</strong>. Upgrade to Pro for 50 analyses/month or Max for 200 analyses/month.
         </p>
 
         <div style="text-align:center;margin:2rem 0;">
@@ -114,7 +114,7 @@ def send_usage_warning_email(email: str, used: int, limit: int) -> bool:
             <div style="width:{used/limit*100:.0f}%;height:8px;border-radius:6px;background:linear-gradient(90deg,#FF6B35,#FF4500);"></div>
         </div>
 
-        {"<p style='color:#C9D1D9;line-height:1.6;'>Upgrade to <strong style=\"color:#0A7CFF;\">Pro (A$69/mo)</strong> for 25 analyses/month.</p>" if limit <= 3 else "<p style='color:#C9D1D9;line-height:1.6;'>Your quota resets on the 1st of next month.</p>"}
+        {"<p style='color:#C9D1D9;line-height:1.6;'>Upgrade to <strong style=\"color:#0A7CFF;\">Pro (A$99/mo)</strong> for 50 analyses/month or <strong style=\"color:#FFB800;\">Max (A$199/mo)</strong> for 200 analyses/month.</p>" if limit <= 3 else "<p style='color:#C9D1D9;line-height:1.6;'>Your quota resets on the 1st of next month." + (" Consider upgrading to <strong style=\"color:#FFB800;\">Max (A$199/mo)</strong> for 200 analyses/month.</p>" if limit <= 50 else "</p>")}
 
         <div style="text-align:center;margin:2rem 0;">
             <a href="https://cdi-suite-cloud-f3svb9i29ma9kpwxgtdc6l.streamlit.app"
