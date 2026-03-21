@@ -46,12 +46,6 @@ from tabs import tab1_site_design, tab2_drawing_analyser, tab4_contract_guard
 render_sidebar()
 render_header()
 
-# Scroll to top on page load
-st.components.v1.html(
-    "<script>window.parent.document.querySelector('section.main').scrollTo(0, 0);</script>",
-    height=0,
-)
-
 _ASSETS_UI = Path(__file__).resolve().parent / "assets" / "ui"
 
 # Check if current user is admin — admin goes in sidebar
