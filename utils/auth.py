@@ -3,7 +3,7 @@
 import streamlit as st
 from pathlib import Path
 from supabase import create_client, Client
-from utils.i18n import t, t_fmt
+from utils.i18n import t, t_fmt, get_region
 
 _ASSETS_UI = Path(__file__).resolve().parent.parent / "assets" / "ui"
 
@@ -87,9 +87,14 @@ def _do_reset_password(email: str) -> bool:
 
 
 def _render_lang_toggle():
-    """Render a compact language toggle at the top-right of the page."""
-    _, rc = st.columns([6, 1])
-    with rc:
+    """Render a compact language + region toggle at the top-right of the page."""
+    _, region_col, lang_col = st.columns([5, 1, 1])
+    with region_col:
+        regions = ["Australia", "China"]
+        cur_r = 1 if st.session_state.get("region") == "cn" else 0
+        region_choice = st.selectbox("🌏", regions, index=cur_r, key="region_select_auth", label_visibility="collapsed")
+        st.session_state["region"] = "cn" if region_choice == "China" else "au"
+    with lang_col:
         langs = ["English", "中文"]
         cur = 1 if st.session_state.get("lang") == "zh" else 0
         choice = st.selectbox("🌐", langs, index=cur, key="lang_select_auth", label_visibility="collapsed")
@@ -150,7 +155,11 @@ def render_auth_page():
             unsafe_allow_html=True,
         )
     with f3:
-        st.image(str(_ASSETS_UI / "contract_guard.png"), use_container_width=True)
+        _cg_img = "contract_guard_cn.png" if get_region() == "cn" else "contract_guard.png"
+        _cg_path = _ASSETS_UI / _cg_img
+        if not _cg_path.exists():
+            _cg_path = _ASSETS_UI / "contract_guard.png"
+        st.image(str(_cg_path), use_container_width=True)
         st.markdown(
             f"<div style='text-align:center; padding:0.5rem 0;'>"
             f"<h4 style='color:#58A6FF; margin:0 0 0.3rem 0; font-size:0.95rem;'>{t('feat_contract_title')}</h4>"

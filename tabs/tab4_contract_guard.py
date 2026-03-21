@@ -190,6 +190,146 @@ Severity Guidelines:
 LANGUAGE INSTRUCTION:
 Write all analysis output in English. Use professional, authoritative language suitable for an Australian construction law advisory report."""
 
+SYSTEM_PROMPT_CN = """You are a senior Chinese construction law consultant and quantity surveyor with 20+ years of experience across residential and commercial construction projects in China. You provide expert contract risk analysis.
+
+YOUR KNOWLEDGE BASE:
+
+## CHINESE LEGISLATION
+- 《民法典》合同编: contract formation, performance, breach, remedies, construction contract special provisions (Chapter 18)
+- 《建筑法》: construction licensing, quality management, safety requirements
+- 《建设工程质量管理条例》: quality supervision, warranty periods (foundation/structure 50 years, waterproofing 5 years, electrical/plumbing 2 years)
+- 《建设工程安全生产管理条例》: safety management, accident reporting
+- 《招标投标法》及实施条例: bidding and tendering requirements for public projects
+- 《建设工程价款结算暂行办法》(财建[2004]369号): payment settlement procedures, progress payment requirements
+- 《保障中小企业款项支付条例》: payment protection for SMEs
+
+## STANDARD FORM CONTRACTS
+- GF-2017-0201《建设工程施工合同（示范文本）》: standard construction contract template issued by MOHURD
+- GF-2020-0216《建设项目工程总承包合同（示范文本）》: EPC contract template
+- FIDIC contracts (used in international/large-scale projects in China)
+
+## NATIONAL STANDARDS
+- GB 50300《建筑工程施工质量验收统一标准》
+- GB 50500《建设工程工程量清单计价规范》
+- GB 50854《房屋建筑与装饰工程工程量计算规范》
+
+## MARKET RATES (2024-2025 RMB, Tier 1 Cities)
+- Structural concrete: ¥600-900/m3 supply and pour
+- Structural steel: ¥8,000-12,000/tonne fabricated and erected
+- Standard brickwork: ¥60-100/m2 laid
+- Electrical rough-in (residential): ¥15,000-30,000 per dwelling
+- Plumbing rough-in (residential): ¥12,000-25,000 per dwelling
+- Builder's margin: 8-15% (residential), 3-8% (commercial)
+- Liquidated damages: 0.03-0.05% of contract value per day typical
+
+You respond ONLY in valid JSON format as specified in the user prompt. Be thorough, precise, and cite specific legislation sections."""
+
+RISK_ANALYSIS_PROMPT_CN = """Analyze the provided Chinese construction contract document(s) thoroughly. Return a comprehensive risk analysis in the following JSON structure:
+
+{
+  "summary": {
+    "overallRiskLevel": "high" | "medium" | "low",
+    "totalFindings": <number>,
+    "highRiskCount": <number>,
+    "mediumRiskCount": <number>,
+    "lowRiskCount": <number>,
+    "executiveSummary": "<2-3 paragraphs summarizing key risks and overall assessment>",
+    "contractType": "<identified contract type, e.g. GF-2017-0201, FIDIC, Custom>",
+    "estimatedContractValue": "<if identifiable from the documents>"
+  },
+  "findings": [
+    {
+      "id": "<unique id like F001>",
+      "category": "<one of: legal_compliance, financial_risk, missing_clauses, unfair_terms, payment_terms, liability_insurance, dispute_resolution, variations_scope, timeframes_delays, regulatory>",
+      "severity": "high" | "medium" | "low",
+      "title": "<concise finding title>",
+      "description": "<detailed explanation of the issue found>",
+      "recommendation": "<specific professional guidance on how to address this>",
+      "legalReference": "<relevant legislation section or standard clause>",
+      "affectedParties": ["<who is affected, e.g. Owner, Contractor, Subcontractor>"],
+      "documentReference": {
+        "fileName": "<source document name>",
+        "section": "<contract clause number if identifiable>"
+      },
+      "marketBenchmark": {
+        "item": "<construction item>",
+        "contractRate": "<rate stated in contract>",
+        "marketRate": "<expected market rate range>",
+        "variance": "<percentage or yuan variance>"
+      }
+    }
+  ]
+}
+
+NOTE: The "marketBenchmark" field should ONLY be included for findings in the "financial_risk" category where a price comparison is relevant. For other categories, omit this field entirely.
+
+## ANALYSIS CHECKLIST:
+
+### 1. LEGAL COMPLIANCE
+- Contract compliant with《民法典》合同编 construction contract provisions?
+- Contractor qualifications verified per《建筑法》?
+- Quality warranty periods per《建设工程质量管理条例》?
+- Bidding compliance per《招标投标法》(if applicable)?
+
+### 2. PAYMENT TERMS
+- Progress payment schedule aligned with《建设工程价款结算暂行办法》?
+- Payment timeline within 30 days per《保障中小企业款项支付条例》?
+- Retention amounts reasonable (typically 3-5%)?
+
+### 3. UNFAIR CONTRACT TERMS
+- One-sided termination rights?
+- Unreasonable penalty clauses?
+- Disproportionate indemnities?
+
+### 4. MISSING CLAUSES
+- Dispute resolution mechanism?
+- Variation procedure?
+- Defects liability period (质量保修期)?
+- Force majeure provisions?
+
+### 5. FINANCIAL RISK
+- Compare rates against market benchmarks
+- Front-loading of payment schedule?
+- Performance bond / guarantee provisions?
+
+### 6. LIABILITY AND INSURANCE
+- Construction all-risk insurance (建筑工程一切险)?
+- Third-party liability insurance?
+- Workers compensation (工伤保险)?
+
+### 7. TIMEFRAMES AND DELAYS
+- Completion date specified?
+- Extension of time provisions (工期顺延)?
+- Liquidated damages rate?
+
+### 8. VARIATIONS AND SCOPE
+- Variation procedure and pricing?
+- Scope clearly defined per GB 50500?
+
+### 9. DISPUTE RESOLUTION
+- Tiered process (negotiation → mediation → arbitration/litigation)?
+- Arbitration institution specified?
+
+### 10. REGULATORY COMPLIANCE
+- GB 50300 quality acceptance standards?
+- Safety management plan per《建设工程安全生产管理条例》?
+
+Severity Guidelines:
+- HIGH: Legal non-compliance, missing mandatory provisions, significant financial exposure (>10% variance)
+- MEDIUM: Departures from best practice, moderate financial risk (5-10% variance)
+- LOW: Minor improvements recommended, industry standard but not optimal
+
+LANGUAGE INSTRUCTION:
+Write all analysis output in the same language as the contract document. If the contract is in Chinese, write in Chinese. If in English, write in English. Use professional, authoritative language suitable for a Chinese construction law advisory report."""
+
+
+def _get_prompts():
+    """Return the appropriate (system_prompt, risk_analysis_prompt) based on region."""
+    from utils.i18n import get_region
+    if get_region() == "cn":
+        return SYSTEM_PROMPT_CN, RISK_ANALYSIS_PROMPT_CN
+    return SYSTEM_PROMPT, RISK_ANALYSIS_PROMPT
+
 
 # ---------------------------------------------------------------------------
 # Document extraction helpers
@@ -271,14 +411,15 @@ def _analyse_contract(
             else:
                 st.warning(f"⚠️ Could not extract text from {doc['name']} and file type is not supported for direct upload.")
 
-    parts.append(types.Part.from_text(text=RISK_ANALYSIS_PROMPT))
+    sys_prompt, risk_prompt = _get_prompts()
+    parts.append(types.Part.from_text(text=risk_prompt))
 
     try:
         response = client.models.generate_content(
             model=gemini_client.get_model_id(),
             contents=parts,
             config=types.GenerateContentConfig(
-                system_instruction=SYSTEM_PROMPT,
+                system_instruction=sys_prompt,
                 temperature=0.2,
                 thinking_config=types.ThinkingConfig(
                     thinking_budget=8000,

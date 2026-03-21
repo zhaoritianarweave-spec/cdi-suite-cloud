@@ -8,7 +8,9 @@ TRANSLATIONS = {
     "hero_subtitle": {"en": "Architecture & Engineering Intelligence Platform", "zh": "建筑与工程智能平台"},
     "hero_caption": {
         "en": "Photorealistic renderings · Construction drawing analysis · Contract risk review — based on Australian laws and regulations",
+        "en_cn": "Photorealistic renderings · Construction drawing analysis · Contract risk review — based on Chinese laws and regulations",
         "zh": "真实感渲染 · 施工图纸分析 · 合同风险审查 — 依据澳洲法律法规",
+        "zh_cn": "真实感渲染 · 施工图纸分析 · 合同风险审查 — 依据中国法律法规",
     },
     # ── Landing feature cards ──
     "feat_renderer_title": {"en": "Site Renderer", "zh": "场地渲染器"},
@@ -19,12 +21,16 @@ TRANSLATIONS = {
     "feat_analyser_title": {"en": "Drawing Analyser", "zh": "图纸分析器"},
     "feat_analyser_desc": {
         "en": "Quantity takeoff, BCA/AS compliance checks and drawing discrepancy detection, based on Australian laws and regulations.",
+        "en_cn": "Quantity takeoff, GB standard compliance checks and drawing discrepancy detection, based on Chinese laws and regulations.",
         "zh": "工程量提取、BCA/AS 合规检查与图纸差异检测，依据澳洲法律法规。",
+        "zh_cn": "工程量提取、GB 国标合规检查与图纸差异检测，依据中国法律法规。",
     },
     "feat_contract_title": {"en": "ContractGuard", "zh": "合同卫士"},
     "feat_contract_desc": {
         "en": "Contract risk analysis based on Australian laws, regulations, NCC & Security of Payment Act.",
+        "en_cn": "Contract risk analysis based on Chinese laws, regulations & construction contract standards.",
         "zh": "基于澳洲法律法规、NCC 与支付安全法的合同风险分析。",
+        "zh_cn": "基于中国法律法规、住建部规范及《建设工程施工合同》标准的合同风险分析。",
     },
     "pricing_badge": {
         "en": "Currently in Beta — Free to try",
@@ -160,7 +166,9 @@ TRANSLATIONS = {
     "t2_title": {"en": "Drawing Intelligence & Quantity Take-Off", "zh": "图纸智能分析与工程量提取"},
     "t2_caption": {
         "en": "Upload a construction drawing — ArchiMind Pro reads annotations, extracts quantities, detects discrepancies and checks compliance based on Australian laws and regulations.",
+        "en_cn": "Upload a construction drawing — ArchiMind Pro reads annotations, extracts quantities, detects discrepancies and checks compliance based on Chinese laws and regulations.",
         "zh": "上传施工图纸 — ArchiMind Pro 自动读取标注、提取工程量、检测差异，依据澳洲法律法规进行合规检查。",
+        "zh_cn": "上传施工图纸 — ArchiMind Pro 自动读取标注、提取工程量、检测差异，依据中国法律法规进行合规检查。",
     },
     "t2_drawing": {"en": "Construction Drawing", "zh": "施工图纸"},
     "t2_upload": {"en": "Upload a drawing", "zh": "上传图纸"},
@@ -189,7 +197,12 @@ TRANSLATIONS = {
     # Tab2 focus options
     "af_qto": {"en": "📊 Quantity Take-off (QTO)", "zh": "📊 工程量提取 (QTO)"},
     "af_discrepancy": {"en": "🔍 Discrepancy / Error Detection", "zh": "🔍 差异 / 错误检测"},
-    "af_compliance": {"en": "✅ Compliance Check (BCA/AS)", "zh": "✅ 合规检查 (BCA/AS)"},
+    "af_compliance": {
+        "en": "✅ Compliance Check (BCA/AS)",
+        "en_cn": "✅ Compliance Check (GB Standards)",
+        "zh": "✅ 合规检查 (BCA/AS)",
+        "zh_cn": "✅ 合规检查 (GB 国标)",
+    },
     "af_constructability": {"en": "🏗️ Constructability Review", "zh": "🏗️ 可施工性审查"},
     "af_cost": {"en": "💰 Cost Estimation Indicators", "zh": "💰 成本估算指标"},
     # Tab2 progress
@@ -204,7 +217,9 @@ TRANSLATIONS = {
     "t4_title": {"en": "ContractGuard — Clause Risk Analyser", "zh": "合同卫士 — 条款风险分析器"},
     "t4_caption": {
         "en": "Upload a construction contract — ArchiMind Pro checks Australian legislation compliance, identifies unfair terms, benchmarks financial provisions and generates a comprehensive risk report.",
+        "en_cn": "Upload a construction contract — ArchiMind Pro checks Chinese legislation compliance, identifies unfair terms, benchmarks financial provisions and generates a comprehensive risk report.",
         "zh": "上传施工合同 — ArchiMind Pro 检查澳洲法律法规合规性、识别不公平条款、对标财务条款并生成综合风险报告。",
+        "zh_cn": "上传施工合同 — ArchiMind Pro 检查中国法律法规合规性、识别不公平条款、对标财务条款并生成综合风险报告。",
     },
     "t4_documents": {"en": "Contract Documents", "zh": "合同文件"},
     "t4_upload": {"en": "Upload contract documents", "zh": "上传合同文件"},
@@ -244,8 +259,18 @@ TRANSLATIONS = {
     "t4_p1": {"en": "Uploading contract documents...", "zh": "上传合同文件..."},
     "t4_p2": {"en": "Parsing document structure...", "zh": "解析文档结构..."},
     "t4_p3": {"en": "Identifying contract clauses...", "zh": "识别合同条款..."},
-    "t4_p4": {"en": "Cross-referencing Australian legislation...", "zh": "交叉引用澳大利亚法规..."},
-    "t4_p5": {"en": "Checking Security of Payment Act compliance...", "zh": "检查支付安全法合规性..."},
+    "t4_p4": {
+        "en": "Cross-referencing Australian legislation...",
+        "en_cn": "Cross-referencing Chinese legislation...",
+        "zh": "交叉引用澳大利亚法规...",
+        "zh_cn": "交叉引用中国法律法规...",
+    },
+    "t4_p5": {
+        "en": "Checking Security of Payment Act compliance...",
+        "en_cn": "Checking construction contract standards compliance...",
+        "zh": "检查支付安全法合规性...",
+        "zh_cn": "检查《建设工程施工合同》合规性...",
+    },
     "t4_p6": {"en": "Evaluating unfair contract terms...", "zh": "评估不公平合同条款..."},
     "t4_p7": {"en": "Analysing payment schedules...", "zh": "分析付款计划..."},
     "t4_p8": {"en": "Reviewing insurance & liability provisions...", "zh": "审查保险与责任条款..."},
@@ -274,12 +299,23 @@ def get_lang() -> str:
     return st.session_state.get("lang", "en")
 
 
+def get_region() -> str:
+    """Return the current region code ('au' or 'cn')."""
+    return st.session_state.get("region", "au")
+
+
 def t(key: str) -> str:
-    """Return the translated string for *key* in the current language."""
+    """Return the translated string for *key* in the current language and region."""
     entry = TRANSLATIONS.get(key)
     if entry is None:
         return key
     lang = get_lang()
+    region = get_region()
+    # Try region-specific variant first (e.g. "en_cn"), then fall back to base lang
+    if region == "cn":
+        region_key = f"{lang}_cn"
+        if region_key in entry:
+            return entry[region_key]
     return entry.get(lang, entry.get("en", key))
 
 

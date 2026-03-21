@@ -366,11 +366,18 @@ def render_sidebar():
 
         st.markdown("---")
 
-        # Language toggle
-        langs = ["English", "中文"]
-        cur = 1 if st.session_state.get("lang") == "zh" else 0
-        choice = st.selectbox("🌐", langs, index=cur, key="lang_select_sidebar", label_visibility="collapsed")
-        st.session_state["lang"] = "zh" if choice == "中文" else "en"
+        # Region & Language toggles
+        region_col, lang_col = st.columns(2)
+        with region_col:
+            regions = ["Australia", "China"]
+            cur_r = 1 if st.session_state.get("region") == "cn" else 0
+            region_choice = st.selectbox("🌏", regions, index=cur_r, key="region_select_sidebar", label_visibility="collapsed")
+            st.session_state["region"] = "cn" if region_choice == "China" else "au"
+        with lang_col:
+            langs = ["English", "中文"]
+            cur = 1 if st.session_state.get("lang") == "zh" else 0
+            choice = st.selectbox("🌐", langs, index=cur, key="lang_select_sidebar", label_visibility="collapsed")
+            st.session_state["lang"] = "zh" if choice == "中文" else "en"
 
         st.markdown("---")
 

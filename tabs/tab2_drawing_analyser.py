@@ -38,7 +38,9 @@ def _progress_messages() -> list[str]:
 # ---------------------------------------------------------------------------
 
 def _build_analysis_prompt(focus_keys: list[str]) -> str:
-    """Build the Gemini prompt based on selected analysis focus."""
+    """Build the Gemini prompt based on selected analysis focus and region."""
+    from utils.i18n import get_region
+    is_cn = get_region() == "cn"
 
     qto_block = """
 ## QUANTITY TAKE-OFF
@@ -68,7 +70,27 @@ Use severity indicators: 🔴 Critical, 🟡 Warning, 🟢 Minor
 - 🟢 Minor (note for record): Z
 """
 
-    compliance_block = """
+    if is_cn:
+        compliance_block = """
+## COMPLIANCE OBSERVATIONS
+
+| Standard | Clause | Status | Observation |
+|----------|--------|--------|-------------|
+[Check against: GB 50011 (seismic), GB 50015 (plumbing/drainage), JGJ 100 (parking), GB 50763 (accessibility), GB 50016 (fire protection), local planning regulations as applicable]
+Use status: ✅ Pass, ⚠️ Flag, ❌ Fail
+"""
+        cost_block = """
+## COST ESTIMATION INDICATORS
+
+| Item | Estimated Quantity | Unit Rate Range (RMB) | Estimated Cost Range | Notes |
+|------|-------------------|----------------------|---------------------|-------|
+[Based on extracted quantities, provide preliminary cost ranges using typical Chinese civil construction rates per GB 50500.]
+
+### Budget Flags
+[Identify items that may significantly impact budget or have high cost uncertainty.]
+"""
+    else:
+        compliance_block = """
 ## COMPLIANCE OBSERVATIONS
 
 | Standard | Clause | Status | Observation |
@@ -76,13 +98,7 @@ Use severity indicators: 🔴 Critical, 🟡 Warning, 🟢 Minor
 [Check against: BCA, AS 3500 (plumbing/drainage), AS 2890 (parking), AS 1428 (access), local council DCPs as applicable]
 Use status: ✅ Pass, ⚠️ Flag, ❌ Fail
 """
-
-    constructability_block = """
-## CONSTRUCTABILITY NOTES
-[Practical observations about construction sequence, access for plant, staging, potential clashes with existing services, temporary works requirements, and any buildability concerns.]
-"""
-
-    cost_block = """
+        cost_block = """
 ## COST ESTIMATION INDICATORS
 
 | Item | Estimated Quantity | Unit Rate Range (AUD) | Estimated Cost Range | Notes |
@@ -91,6 +107,11 @@ Use status: ✅ Pass, ⚠️ Flag, ❌ Fail
 
 ### Budget Flags
 [Identify items that may significantly impact budget or have high cost uncertainty.]
+"""
+
+    constructability_block = """
+## CONSTRUCTABILITY NOTES
+[Practical observations about construction sequence, access for plant, staging, potential clashes with existing services, temporary works requirements, and any buildability concerns.]
 """
 
     # Assemble the sections based on selected focus
@@ -108,7 +129,12 @@ Use status: ✅ Pass, ⚠️ Flag, ❌ Fail
 
     focus_desc = ", ".join(focus_keys)
 
-    return f"""You are a senior civil drafter and quantity surveyor at a leading Australian consulting engineering firm. Analyse this construction drawing in detail.
+    if is_cn:
+        role = "a senior civil drafter and quantity surveyor at a leading Chinese consulting engineering firm"
+    else:
+        role = "a senior civil drafter and quantity surveyor at a leading Australian consulting engineering firm"
+
+    return f"""You are {role}. Analyse this construction drawing in detail.
 
 First identify the drawing type (e.g. Site Plan, Floor Plan, Structural Plan, Elevation, Section, Services, Landscape, etc.) from the drawing content.
 Analysis Required: {focus_desc}
