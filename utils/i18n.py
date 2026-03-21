@@ -99,7 +99,7 @@ TRANSLATIONS = {
     "pricing_btn_pro": {"en": "Choose Pro", "zh": "选择 Pro"},
     "pricing_btn_max": {"en": "Choose Max", "zh": "选择 Max"},
     "pricing_current": {"en": "Current Plan", "zh": "当前方案"},
-    "view_plans": {"en": "View Plans", "zh": "查看方案"},
+    "view_plans": {"en": "View Plans", "zh": "会员方案"},
     "log_out": {"en": "Log Out", "zh": "退出登录"},
     # ── App / Tabs ──
     "tab_site_renderer": {"en": "Site Renderer", "zh": "场地渲染"},
