@@ -18,6 +18,7 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* --- Hide Streamlit Cloud UI elements --- */
+[data-testid="stToolbar"] {display: none !important;}
 
 /* --- Blueprint grid overlay on main area --- */
 [data-testid="stMainBlockContainer"] {
