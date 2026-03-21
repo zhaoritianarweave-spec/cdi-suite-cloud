@@ -194,8 +194,9 @@ def render():
             else:
                 st.image(image_bytes, caption="Uploaded Drawing", use_container_width=True)
 
+        from utils.i18n import get_region
         demo_drawings = _get_demo_drawings()
-        if demo_drawings:
+        if demo_drawings and get_region() != "cn":
             st.markdown(
                 f"<span style='color:#8B949E;font-size:0.8rem;'>{t('t2_demo_label')}</span>",
                 unsafe_allow_html=True,

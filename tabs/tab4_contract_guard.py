@@ -668,8 +668,9 @@ def render():
                 )
 
         # Demo contracts
+        from utils.i18n import get_region
         demos = _get_demo_contracts()
-        if demos:
+        if demos and get_region() != "cn":
             st.markdown(
                 f"<span style='color:#8B949E;font-size:0.8rem;'>{t('t4_demo_label')}</span>",
                 unsafe_allow_html=True,
