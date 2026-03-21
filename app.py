@@ -47,9 +47,9 @@ render_sidebar()
 render_header()
 
 # Scroll to top on page load
-st.markdown(
+st.components.v1.html(
     "<script>window.parent.document.querySelector('section.main').scrollTo(0, 0);</script>",
-    unsafe_allow_html=True,
+    height=0,
 )
 
 _ASSETS_UI = Path(__file__).resolve().parent / "assets" / "ui"
