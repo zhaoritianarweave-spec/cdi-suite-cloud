@@ -631,7 +631,6 @@ def render():
             type=["pdf", "docx", "doc", "jpg", "jpeg", "png"],
             accept_multiple_files=True,
             key="tab4_upload",
-            label_visibility="collapsed",
         )
 
         if uploaded_files:

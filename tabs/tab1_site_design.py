@@ -294,7 +294,6 @@ def render():
             t("t1_upload"),
             type=["jpg", "jpeg", "png"],
             key="tab1_upload",
-            label_visibility="collapsed",
         )
 
         if uploaded is not None:

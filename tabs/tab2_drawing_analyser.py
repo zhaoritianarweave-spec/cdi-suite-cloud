@@ -183,7 +183,6 @@ def render():
             t("t2_upload"),
             type=["jpg", "jpeg", "png", "pdf"],
             key="tab2_upload",
-            label_visibility="collapsed",
         )
 
         if uploaded is not None:
