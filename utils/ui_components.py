@@ -492,9 +492,7 @@ def render_sidebar():
 
             st.markdown("---")
 
-            if st.button(t("support_button"), use_container_width=True):
-                st.session_state["show_support_email"] = not st.session_state.get("show_support_email", False)
-            if st.session_state.get("show_support_email"):
+            with st.expander(t("support_button"), expanded=False):
                 st.markdown(
                     f"<div style='text-align:center;color:#8B949E;font-size:0.82rem;padding:4px 0;'>"
                     f"{t('support_email_label')}: hsy8260@proton.me</div>",
