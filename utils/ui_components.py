@@ -340,6 +340,84 @@ def render_header():
     )
 
 
+@st.dialog("💎")
+def _render_pricing_dialog(user, current_plan, create_checkout_session):
+    """Render a pricing dialog with Pro and Max plans side by side."""
+    st.markdown(f"### {t('pricing_title')}")
+
+    # Billing toggle
+    billing_mode = st.radio(
+        "billing",
+        [t("pricing_monthly"), f"{t('pricing_annual')}  🏷️ {t('pricing_save')}"],
+        index=1,
+        horizontal=True,
+        label_visibility="collapsed",
+    )
+    is_annual = t("pricing_annual") in billing_mode
+
+    col_pro, col_max = st.columns(2)
+
+    # --- Pro card ---
+    with col_pro:
+        price = "A$49" if is_annual else "A$99"
+        st.markdown(
+            f"""
+            <div style="background:#161B22;border:2px solid #0A7CFF;border-radius:12px;padding:1.2rem;text-align:center;">
+                <h3 style="color:#0A7CFF;margin:0;">Pro</h3>
+                <div style="margin:0.8rem 0;">
+                    <span style="font-size:2rem;font-weight:700;color:#E6EDF3;">{price}</span>
+                    <span style="color:#8B949E;font-size:0.9rem;">{t('pricing_per_month')}</span>
+                </div>
+                {"<div style='background:#0A7CFF;color:#fff;padding:2px 8px;border-radius:4px;font-size:0.7rem;font-weight:600;display:inline-block;margin-bottom:0.8rem;'>" + t('pricing_save') + "</div>" if is_annual else "<div style='height:24px;'></div>"}
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        for feat in t("pricing_pro_features").split("\n"):
+            st.markdown(f"<div style='padding:3px 0;font-size:0.85rem;color:#C9D1D9;'>✅ {feat}</div>", unsafe_allow_html=True)
+
+        if current_plan == "pro":
+            st.button(t("pricing_current"), use_container_width=True, disabled=True, key="pro_current_btn")
+        else:
+            if st.button(t("pricing_btn_pro"), use_container_width=True, type="primary", key="pro_buy_btn"):
+                interval = "annual" if is_annual else "monthly"
+                url = create_checkout_session(user["id"], user["email"], "pro", interval)
+                if url:
+                    st.markdown(f'<meta http-equiv="refresh" content="0;url={url}">', unsafe_allow_html=True)
+                    st.info(t("redirecting_checkout"))
+                    st.stop()
+
+    # --- Max card ---
+    with col_max:
+        price = "A$99" if is_annual else "A$199"
+        st.markdown(
+            f"""
+            <div style="background:#161B22;border:2px solid #FFB800;border-radius:12px;padding:1.2rem;text-align:center;">
+                <h3 style="color:#FFB800;margin:0;">Max</h3>
+                <div style="margin:0.8rem 0;">
+                    <span style="font-size:2rem;font-weight:700;color:#E6EDF3;">{price}</span>
+                    <span style="color:#8B949E;font-size:0.9rem;">{t('pricing_per_month')}</span>
+                </div>
+                {"<div style='background:#FFB800;color:#000;padding:2px 8px;border-radius:4px;font-size:0.7rem;font-weight:600;display:inline-block;margin-bottom:0.8rem;'>" + t('pricing_save') + "</div>" if is_annual else "<div style='height:24px;'></div>"}
+            </div>
+            """,
+            unsafe_allow_html=True,
+        )
+        for feat in t("pricing_max_features").split("\n"):
+            st.markdown(f"<div style='padding:3px 0;font-size:0.85rem;color:#C9D1D9;'>✅ {feat}</div>", unsafe_allow_html=True)
+
+        if current_plan == "max":
+            st.button(t("pricing_current"), use_container_width=True, disabled=True, key="max_current_btn")
+        else:
+            if st.button(t("pricing_btn_max"), use_container_width=True, type="primary", key="max_buy_btn"):
+                interval = "annual" if is_annual else "monthly"
+                url = create_checkout_session(user["id"], user["email"], "max", interval)
+                if url:
+                    st.markdown(f'<meta http-equiv="refresh" content="0;url={url}">', unsafe_allow_html=True)
+                    st.info(t("redirecting_checkout"))
+                    st.stop()
+
+
 def render_sidebar():
     """Render the sidebar with user info, plan, usage stats, and upgrade option."""
     from utils.auth import get_user, logout
@@ -425,64 +503,22 @@ def render_sidebar():
 
             # Upgrade / Manage buttons
             if is_stripe_configured():
-                if plan == "free":
-                    billing = st.radio(
-                        "Billing",
-                        [t("billing_monthly_pro"), t("billing_annual_pro")],
-                        index=1,
-                        key="billing_interval",
-                        label_visibility="collapsed",
-                    )
-                    interval = "annual" if "50%" in billing else "monthly"
-                    price_label = "A$49/mo" if interval == "annual" else "A$99/mo"
+                if plan in ("free", "pro"):
+                    # "View Plans" button opens pricing dialog
+                    if st.button(t("view_plans"), use_container_width=True, type="primary"):
+                        st.session_state["show_pricing"] = True
 
-                    if st.button(t_fmt("upgrade_btn", price=price_label), use_container_width=True, type="primary"):
-                        url = create_checkout_session(user["id"], user["email"], "pro", interval)
-                        if url:
-                            st.markdown(
-                                f'<meta http-equiv="refresh" content="0;url={url}">',
-                                unsafe_allow_html=True,
-                            )
-                            st.info(t("redirecting_checkout"))
-                            st.stop()
-                elif plan == "pro":
-                    billing_max = st.radio(
-                        "Billing",
-                        [t("billing_monthly_max"), t("billing_annual_max")],
-                        index=1,
-                        key="billing_interval_max",
-                        label_visibility="collapsed",
-                    )
-                    interval = "annual" if "50%" in billing_max else "monthly"
-                    price_label = "A$99/mo" if interval == "annual" else "A$199/mo"
+                    if st.session_state.get("show_pricing"):
+                        _render_pricing_dialog(user, plan, create_checkout_session)
 
-                    if st.button(t_fmt("upgrade_max_btn", price=price_label), use_container_width=True, type="primary"):
-                        url = create_checkout_session(user["id"], user["email"], "max", interval)
-                        if url:
-                            st.markdown(
-                                f'<meta http-equiv="refresh" content="0;url={url}">',
-                                unsafe_allow_html=True,
-                            )
-                            st.info(t("redirecting_checkout"))
-                            st.stop()
-
+                if plan in ("pro", "max", "enterprise"):
                     portal_url = create_customer_portal_url(user["id"])
                     if portal_url:
                         st.markdown(
                             f"<a href='{portal_url}' target='_blank' style='"
                             f"display:block;text-align:center;padding:8px;border-radius:6px;"
                             f"border:1px solid #30363D;color:#E6EDF3;text-decoration:none;"
-                            f"font-size:0.85rem;'>{t('manage_subscription')}</a>",
-                            unsafe_allow_html=True,
-                        )
-                else:
-                    portal_url = create_customer_portal_url(user["id"])
-                    if portal_url:
-                        st.markdown(
-                            f"<a href='{portal_url}' target='_blank' style='"
-                            f"display:block;text-align:center;padding:8px;border-radius:6px;"
-                            f"border:1px solid #30363D;color:#E6EDF3;text-decoration:none;"
-                            f"font-size:0.85rem;'>{t('manage_subscription')}</a>",
+                            f"font-size:0.85rem;margin-top:8px;'>{t('manage_subscription')}</a>",
                             unsafe_allow_html=True,
                         )
 
