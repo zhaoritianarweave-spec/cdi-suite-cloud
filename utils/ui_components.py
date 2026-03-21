@@ -18,23 +18,11 @@ h1, h2, h3, h4, h5, h6 {
 }
 
 /* --- Hide Streamlit Cloud UI elements --- */
-#MainMenu {visibility: hidden !important;}
-header {visibility: hidden !important;}
-footer {visibility: hidden !important;}
 [data-testid="manage-app-button"] {display: none !important;}
 [data-testid="stStatusWidget"] {display: none !important;}
 .viewerBadge_container__r5tak {display: none !important;}
 .stDeployButton {display: none !important;}
 .styles_viewerBadge__CvC9N {display: none !important;}
-[data-testid="stToolbar"] {display: none !important;}
-
-/* --- Hide bottom-right floating widgets --- */
-iframe[src*="streamlit"],
-div[class*="badge"],
-div[style*="position: fixed"][style*="bottom"],
-div[style*="position:fixed"][style*="bottom"] {
-    display: none !important;
-}
 
 /* --- Blueprint grid overlay on main area --- */
 [data-testid="stMainBlockContainer"] {
