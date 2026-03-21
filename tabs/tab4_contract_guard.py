@@ -667,10 +667,9 @@ def render():
                     unsafe_allow_html=True,
                 )
 
-        # Demo contracts
-        from utils.i18n import get_region
+        # Demo contracts (disabled)
         demos = _get_demo_contracts()
-        if demos and get_region() != "cn":
+        if False and demos:
             st.markdown(
                 f"<span style='color:#8B949E;font-size:0.8rem;'>{t('t4_demo_label')}</span>",
                 unsafe_allow_html=True,
