@@ -12,6 +12,7 @@ import stripe
 # Plan configuration
 PLANS = {
     "free": {"name": "Free", "price": 0, "limit": 3, "price_id": None},
+    "beta": {"name": "Beta", "price": 0, "limit": 50, "price_id": None},
     "pro": {"name": "Pro", "price": 99, "price_annual": 49, "limit": 50, "currency": "AUD", "price_id": None},
     "max": {"name": "Max", "price": 199, "price_annual": 99, "limit": 200, "currency": "AUD", "price_id": None},
     "enterprise": {"name": "Enterprise", "price": None, "limit": 999999, "price_id": None},

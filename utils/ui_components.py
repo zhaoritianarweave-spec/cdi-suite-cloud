@@ -480,7 +480,7 @@ def render_sidebar():
             st.markdown(f"[{user['email']}](mailto:{user['email']})")
 
             # Plan badge
-            badge_color = {"free": "#8B949E", "pro": "#0A7CFF", "max": "#FFB800", "enterprise": "#00D4AA"}.get(plan, "#8B949E")
+            badge_color = {"free": "#8B949E", "beta": "#FF6B35", "pro": "#0A7CFF", "max": "#FFB800", "enterprise": "#00D4AA"}.get(plan, "#8B949E")
             st.markdown(
                 f"<span style='background:{badge_color}22;color:{badge_color};"
                 f"padding:2px 10px;border-radius:10px;font-size:0.75rem;"
@@ -508,7 +508,7 @@ def render_sidebar():
 
             # Upgrade / Manage buttons
             if is_stripe_configured():
-                if plan in ("free", "pro"):
+                if plan in ("free", "beta", "pro"):
                     # "View Plans" button opens pricing dialog
                     if st.button(t("view_plans"), use_container_width=True, type="primary"):
                         st.session_state["show_pricing"] = True
