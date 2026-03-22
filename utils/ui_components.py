@@ -383,7 +383,7 @@ def _render_pricing_dialog(user, current_plan, create_checkout_session):
                 interval = "annual" if is_annual else "monthly"
                 url = create_checkout_session(user["id"], user["email"], "pro", interval)
                 if url:
-                    st.markdown(f'<meta http-equiv="refresh" content="0;url={url}">', unsafe_allow_html=True)
+                    st.components.v1.html(f'<script>window.top.location.href = "{url}";</script>', height=0)
                     st.info(t("redirecting_checkout"))
                     st.stop()
 
@@ -413,7 +413,7 @@ def _render_pricing_dialog(user, current_plan, create_checkout_session):
                 interval = "annual" if is_annual else "monthly"
                 url = create_checkout_session(user["id"], user["email"], "max", interval)
                 if url:
-                    st.markdown(f'<meta http-equiv="refresh" content="0;url={url}">', unsafe_allow_html=True)
+                    st.components.v1.html(f'<script>window.top.location.href = "{url}";</script>', height=0)
                     st.info(t("redirecting_checkout"))
                     st.stop()
 
