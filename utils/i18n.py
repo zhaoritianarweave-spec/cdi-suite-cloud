@@ -85,7 +85,7 @@ TRANSLATIONS = {
     "billing_annual_max": {"en": "Annual — A$99/mo (save 50%)", "zh": "年付 — A$99/月（省50%）"},
     "upgrade_btn": {"en": "⚡ Upgrade to Pro — {price}", "zh": "⚡ 升级 Pro — {price}"},
     "upgrade_max_btn": {"en": "⚡ Upgrade to Max — {price}", "zh": "⚡ 升级 Max — {price}"},
-    "redirecting_checkout": {"en": "Redirecting to checkout...", "zh": "正在跳转结账页面..."},
+    "redirecting_checkout": {"en": "Click to proceed to checkout", "zh": "点击跳转结账页面"},
     "manage_subscription": {"en": "Manage Subscription", "zh": "管理订阅"},
     "pricing_title": {"en": "Choose Your Plan", "zh": "选择方案"},
     "pricing_pro_title": {"en": "Pro", "zh": "Pro"},
