@@ -159,7 +159,7 @@ Produce a COMPLETE construction budget table grouped by category. Use current ty
         role = "a senior civil drafter and quantity surveyor at a leading Australian consulting engineering firm"
 
     from utils.i18n import get_lang
-    lang_instruction = "\n\nIMPORTANT: Respond ENTIRELY in Chinese (简体中文). All text, descriptions, notes, and summaries must be in Chinese. Keep table headers in Chinese. Only technical terms, unit symbols, and standard codes may remain in English." if get_lang() == "zh" else ""
+    lang_instruction = "\n\nIMPORTANT: Respond in Chinese (简体中文). All descriptions, notes, observations, and summaries must be in Chinese. HOWEVER, you MUST keep all ## section headings EXACTLY as specified above in English (e.g. ## DRAWING OVERVIEW, ## QUANTITY TAKE-OFF, ## BUDGET ESTIMATE, etc.). Do NOT translate the ## headings. Only the content under each heading should be in Chinese." if get_lang() == "zh" else ""
 
     return f"""You are {role}. Analyse this construction drawing in detail.
 
