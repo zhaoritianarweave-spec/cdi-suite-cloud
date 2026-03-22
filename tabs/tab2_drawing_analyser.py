@@ -16,7 +16,7 @@ def _analysis_focus() -> dict[str, str]:
         t("af_discrepancy"): "ERRORS",
         t("af_compliance"): "COMPLIANCE",
         t("af_constructability"): "CONSTRUCTABILITY",
-        t("af_cost"): "COST",
+        t("af_budget"): "BUDGET",
     }
 
 
@@ -79,15 +79,27 @@ Use severity indicators: 🔴 Critical, 🟡 Warning, 🟢 Minor
 [Check against: GB 50011 (seismic), GB 50015 (plumbing/drainage), JGJ 100 (parking), GB 50763 (accessibility), GB 50016 (fire protection), local planning regulations as applicable]
 Use status: ✅ Pass, ⚠️ Flag, ❌ Fail
 """
-        cost_block = """
-## COST ESTIMATION INDICATORS
+        budget_block = """
+## BUDGET ESTIMATE
 
-| Item | Estimated Quantity | Unit Rate Range (RMB) | Estimated Cost Range | Notes |
-|------|-------------------|----------------------|---------------------|-------|
-[Based on extracted quantities, provide preliminary cost ranges using typical Chinese civil construction rates per GB 50500.]
+Produce a COMPLETE construction budget table grouped by category. Use current typical Chinese market rates (reference GB 50500).
 
-### Budget Flags
-[Identify items that may significantly impact budget or have high cost uncertainty.]
+| # | Category | Item | Qty | Unit | Unit Rate (RMB) | Amount (RMB) | Notes |
+|---|----------|------|-----|------|-----------------|--------------|-------|
+[Extract EVERY costed item from the drawing. Group by category (e.g. Earthworks, Structure, Drainage, Pavement, Landscaping, Fencing, Services).]
+[Calculate Amount = Qty × Unit Rate for each row.]
+[After each category group, insert a SUBTOTAL row in bold.]
+[At the end add:]
+| | **SUBTOTAL — All Items** | | | | | **[sum]** | |
+| | **Contingency (10%)** | | | | | **[10% of subtotal]** | |
+| | **GRAND TOTAL** | | | | | **[subtotal + contingency]** | |
+
+### Budget Summary
+- Total estimated cost: ¥X
+- Cost per m² (if GFA identifiable): ¥X/m²
+- Key cost drivers: [top 3 items by value]
+- High uncertainty items: [items needing further pricing]
+- Recommended allowances: [any provisional sums]
 """
     else:
         compliance_block = """
@@ -98,15 +110,27 @@ Use status: ✅ Pass, ⚠️ Flag, ❌ Fail
 [Check against: BCA, AS 3500 (plumbing/drainage), AS 2890 (parking), AS 1428 (access), local council DCPs as applicable]
 Use status: ✅ Pass, ⚠️ Flag, ❌ Fail
 """
-        cost_block = """
-## COST ESTIMATION INDICATORS
+        budget_block = """
+## BUDGET ESTIMATE
 
-| Item | Estimated Quantity | Unit Rate Range (AUD) | Estimated Cost Range | Notes |
-|------|-------------------|----------------------|---------------------|-------|
-[Based on extracted quantities, provide preliminary cost ranges using typical Australian civil construction rates.]
+Produce a COMPLETE construction budget table grouped by category. Use current typical Australian market rates.
 
-### Budget Flags
-[Identify items that may significantly impact budget or have high cost uncertainty.]
+| # | Category | Item | Qty | Unit | Unit Rate (AUD) | Amount (AUD) | Notes |
+|---|----------|------|-----|------|-----------------|--------------|-------|
+[Extract EVERY costed item from the drawing. Group by category (e.g. Earthworks, Structure, Drainage, Pavement, Landscaping, Fencing, Services).]
+[Calculate Amount = Qty × Unit Rate for each row.]
+[After each category group, insert a SUBTOTAL row in bold.]
+[At the end add:]
+| | **SUBTOTAL — All Items** | | | | | **[sum]** | |
+| | **Contingency (10%)** | | | | | **[10% of subtotal]** | |
+| | **GRAND TOTAL** | | | | | **[subtotal + contingency]** | |
+
+### Budget Summary
+- Total estimated cost: A$X
+- Cost per m² (if GFA identifiable): A$X/m²
+- Key cost drivers: [top 3 items by value]
+- High uncertainty items: [items needing further pricing]
+- Recommended allowances: [any provisional sums]
 """
 
     constructability_block = """
@@ -124,8 +148,8 @@ Use status: ✅ Pass, ⚠️ Flag, ❌ Fail
         sections.append(compliance_block)
     if "CONSTRUCTABILITY" in focus_keys:
         sections.append(constructability_block)
-    if "COST" in focus_keys:
-        sections.append(cost_block)
+    if "BUDGET" in focus_keys:
+        sections.append(budget_block)
 
     focus_desc = ", ".join(focus_keys)
 
@@ -369,8 +393,8 @@ def render():
             tab_labels.append(t("t2_tab_compliance"))
         if "CONSTRUCTABILITY" in focus_keys:
             tab_labels.append(t("t2_tab_constructability"))
-        if "COST" in focus_keys:
-            tab_labels.append(t("t2_tab_cost"))
+        if "BUDGET" in focus_keys:
+            tab_labels.append(t("t2_tab_budget"))
 
         # Parse the result into sections
         sections = _parse_sections(result_text)
@@ -428,19 +452,19 @@ def render():
                     st.info(t("t2_no_constructability"))
             tab_idx += 1
 
-        # Cost tab
-        if "COST" in focus_keys:
+        # Budget tab
+        if "BUDGET" in focus_keys:
             with result_tabs[tab_idx]:
-                cost = sections.get("COST ESTIMATION INDICATORS", "") or sections.get("COST", "")
-                if cost:
-                    st.markdown(cost)
+                budget = sections.get("BUDGET ESTIMATE", "") or sections.get("BUDGET", "")
+                if budget:
+                    st.markdown(budget)
                 else:
-                    st.info(t("t2_no_cost"))
+                    st.info(t("t2_no_budget"))
             tab_idx += 1
 
         # --- Downloads ---
         st.markdown("---")
-        dl_cols = st.columns(3)
+        dl_cols = st.columns(4)
         with dl_cols[0]:
             st.download_button(
                 label=t("t2_download_report"),
@@ -451,7 +475,6 @@ def render():
                 use_container_width=True,
             )
         with dl_cols[1]:
-            # Extract just the QTO table if present
             qto_csv = _extract_qto_csv(result_text)
             if qto_csv:
                 st.download_button(
@@ -463,15 +486,25 @@ def render():
                     use_container_width=True,
                 )
         with dl_cols[2]:
-            # Excel export of QTO
             excel_data = _generate_qto_excel(result_text)
             if excel_data:
                 st.download_button(
-                    label="📊 Excel (.xlsx)",
+                    label=t("t2_download_qto_xlsx"),
                     data=excel_data,
                     file_name="quantity_takeoff.xlsx",
                     mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
                     key="dl_tab2_xlsx",
+                    use_container_width=True,
+                )
+        with dl_cols[3]:
+            budget_excel = _generate_budget_excel(result_text)
+            if budget_excel:
+                st.download_button(
+                    label=t("t2_download_budget"),
+                    data=budget_excel,
+                    file_name="budget_estimate.xlsx",
+                    mime="application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+                    key="dl_tab2_budget_xlsx",
                     use_container_width=True,
                 )
 
@@ -587,6 +620,92 @@ def _generate_qto_excel(text: str) -> bytes | None:
         # Title row above table
         ws.insert_rows(1)
         title_cell = ws.cell(row=1, column=1, value="ArchiMind Pro — Quantity Take-Off Report")
+        title_cell.font = Font(bold=True, size=14, color="0A7CFF")
+
+        buf = BytesIO()
+        wb.save(buf)
+        return buf.getvalue()
+    except Exception:
+        return None
+
+
+def _generate_budget_excel(text: str) -> bytes | None:
+    """Generate a styled Excel file from the BUDGET ESTIMATE section."""
+    try:
+        from io import BytesIO
+        from openpyxl import Workbook
+        from openpyxl.styles import Font, PatternFill, Alignment, Border, Side
+
+        sections = _parse_sections(text)
+        budget = sections.get("BUDGET ESTIMATE", "")
+        if not budget:
+            return None
+
+        # Parse table rows
+        rows = []
+        for line in budget.split("\n"):
+            stripped = line.strip()
+            if stripped.startswith("|") and stripped.endswith("|"):
+                cells = [c.strip() for c in stripped.split("|")[1:-1]]
+                if cells and not all(set(c) <= {"-", ":", " "} for c in cells):
+                    rows.append(cells)
+
+        if len(rows) <= 1:
+            return None
+
+        wb = Workbook()
+        ws = wb.active
+        ws.title = "Budget Estimate"
+
+        # Styles
+        header_font = Font(bold=True, color="FFFFFF", size=11)
+        header_fill = PatternFill(start_color="0A7CFF", end_color="0A7CFF", fill_type="solid")
+        subtotal_fill = PatternFill(start_color="E8F0FE", end_color="E8F0FE", fill_type="solid")
+        total_fill = PatternFill(start_color="0A7CFF", end_color="0A7CFF", fill_type="solid")
+        total_font = Font(bold=True, color="FFFFFF", size=11)
+        bold_font = Font(bold=True)
+        border = Border(
+            left=Side(style="thin", color="D0D0D0"),
+            right=Side(style="thin", color="D0D0D0"),
+            top=Side(style="thin", color="D0D0D0"),
+            bottom=Side(style="thin", color="D0D0D0"),
+        )
+
+        # Write header
+        for col, val in enumerate(rows[0], 1):
+            cell = ws.cell(row=1, column=col, value=val)
+            cell.font = header_font
+            cell.fill = header_fill
+            cell.alignment = Alignment(horizontal="center")
+            cell.border = border
+
+        # Write data with special formatting for subtotal/total rows
+        for row_idx, row_data in enumerate(rows[1:], 2):
+            row_text = " ".join(row_data).upper()
+            is_total = "GRAND TOTAL" in row_text
+            is_subtotal = "SUBTOTAL" in row_text or "CONTINGENCY" in row_text
+
+            for col, val in enumerate(row_data, 1):
+                # Strip markdown bold markers
+                clean_val = val.replace("**", "")
+                cell = ws.cell(row=row_idx, column=col, value=clean_val)
+                cell.border = border
+
+                if is_total:
+                    cell.font = total_font
+                    cell.fill = total_fill
+                elif is_subtotal:
+                    cell.font = bold_font
+                    cell.fill = subtotal_fill
+
+        # Auto-fit column widths
+        for col in ws.columns:
+            max_len = max(len(str(cell.value or "")) for cell in col)
+            ws.column_dimensions[col[0].column_letter].width = min(max_len + 4, 40)
+
+        # Title row above table
+        ws.insert_rows(1)
+        title_cell = ws.cell(row=1, column=1, value="ArchiMind Pro — Budget Estimate")
         title_cell.font = Font(bold=True, size=14, color="0A7CFF")
 
         buf = BytesIO()
