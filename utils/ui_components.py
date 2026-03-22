@@ -379,13 +379,16 @@ def _render_pricing_dialog(user, current_plan, create_checkout_session):
         if current_plan == "pro":
             st.button(t("pricing_current"), use_container_width=True, disabled=True, key="pro_current_btn")
         else:
+            interval = "annual" if is_annual else "monthly"
+            # Generate checkout URL on demand
+            pro_key = f"_checkout_url_pro_{interval}"
             if st.button(t("pricing_btn_pro"), use_container_width=True, type="primary", key="pro_buy_btn"):
-                interval = "annual" if is_annual else "monthly"
                 url = create_checkout_session(user["id"], user["email"], "pro", interval)
                 if url:
-                    st.components.v1.html(f'<script>window.top.location.href = "{url}";</script>', height=0)
-                    st.info(t("redirecting_checkout"))
-                    st.stop()
+                    st.session_state[pro_key] = url
+                    st.rerun()
+            if st.session_state.get(pro_key):
+                st.link_button(f"🔗 {t('redirecting_checkout')}", st.session_state.pop(pro_key), use_container_width=True)
 
     # --- Max card ---
     with col_max:
@@ -409,13 +412,15 @@ def _render_pricing_dialog(user, current_plan, create_checkout_session):
         if current_plan == "max":
             st.button(t("pricing_current"), use_container_width=True, disabled=True, key="max_current_btn")
         else:
+            interval = "annual" if is_annual else "monthly"
+            max_key = f"_checkout_url_max_{interval}"
             if st.button(t("pricing_btn_max"), use_container_width=True, type="primary", key="max_buy_btn"):
-                interval = "annual" if is_annual else "monthly"
                 url = create_checkout_session(user["id"], user["email"], "max", interval)
                 if url:
-                    st.components.v1.html(f'<script>window.top.location.href = "{url}";</script>', height=0)
-                    st.info(t("redirecting_checkout"))
-                    st.stop()
+                    st.session_state[max_key] = url
+                    st.rerun()
+            if st.session_state.get(max_key):
+                st.link_button(f"🔗 {t('redirecting_checkout')}", st.session_state.pop(max_key), use_container_width=True)
 
 
 def render_sidebar():
