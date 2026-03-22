@@ -158,6 +158,9 @@ Produce a COMPLETE construction budget table grouped by category. Use current ty
     else:
         role = "a senior civil drafter and quantity surveyor at a leading Australian consulting engineering firm"
 
+    from utils.i18n import get_lang
+    lang_instruction = "\n\nIMPORTANT: Respond ENTIRELY in Chinese (简体中文). All text, descriptions, notes, and summaries must be in Chinese. Keep table headers in Chinese. Only technical terms, unit symbols, and standard codes may remain in English." if get_lang() == "zh" else ""
+
     return f"""You are {role}. Analyse this construction drawing in detail.
 
 First identify the drawing type (e.g. Site Plan, Floor Plan, Structural Plan, Elevation, Section, Services, Landscape, etc.) from the drawing content.
@@ -173,7 +176,7 @@ PROVIDE YOUR ANALYSIS IN THIS EXACT STRUCTURE:
 
 {"".join(sections)}
 
-Be thorough and specific. Reference exact locations on the drawing (e.g., "grid line B-3", "north-east corner", "chainage 45m"). This analysis will be used by the design team to improve documentation quality."""
+Be thorough and specific. Reference exact locations on the drawing (e.g., "grid line B-3", "north-east corner", "chainage 45m"). This analysis will be used by the design team to improve documentation quality.{lang_instruction}"""
 
 
 # ---------------------------------------------------------------------------
