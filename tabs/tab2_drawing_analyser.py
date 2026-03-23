@@ -84,22 +84,22 @@ Use status: ✅ Pass, ⚠️ Flag, ❌ Fail
 
 Produce a COMPLETE construction budget table grouped by category. Use current typical Chinese market rates (reference GB 50500).
 
-| # | Category | Item | Qty | Unit | Unit Rate (RMB) | Amount (RMB) | Notes |
-|---|----------|------|-----|------|-----------------|--------------|-------|
-[Extract EVERY costed item from the drawing. Group by category (e.g. Earthworks, Structure, Drainage, Pavement, Landscaping, Fencing, Services).]
-[Calculate Amount = Qty × Unit Rate for each row.]
+| 序号 | 分类 | 项目 | 工程量 | 单位 | 单价 (RMB) | 合价 (RMB) | 备注 |
+|------|------|------|--------|------|-----------|-----------|------|
+[Extract EVERY costed item from the drawing. Group by category (e.g. 土方工程, 结构工程, 排水工程, 路面工程, 景观绿化, 围栏工程, 配套设施).]
+[Calculate 合价 = 工程量 × 单价 for each row.]
 [After each category group, insert a SUBTOTAL row in bold.]
 [At the end add:]
-| | **SUBTOTAL — All Items** | | | | | **[sum]** | |
-| | **Contingency (10%)** | | | | | **[10% of subtotal]** | |
-| | **GRAND TOTAL** | | | | | **[subtotal + contingency]** | |
+| | **小计 — 全部项目** | | | | | **[sum]** | |
+| | **不可预见费 (10%)** | | | | | **[10% of subtotal]** | |
+| | **合计总价** | | | | | **[subtotal + contingency]** | |
 
-### Budget Summary
-- Total estimated cost: ¥X
-- Cost per m² (if GFA identifiable): ¥X/m²
-- Key cost drivers: [top 3 items by value]
-- High uncertainty items: [items needing further pricing]
-- Recommended allowances: [any provisional sums]
+### 预算概要
+- 总造价估算: ¥X
+- 单位面积造价 (如可识别建筑面积): ¥X/m²
+- 主要成本构成: [前3项高价项目]
+- 高不确定性项目: [需进一步核价的项目]
+- 建议预留费用: [暂估价/暂定金额]
 """
     else:
         compliance_block = """
