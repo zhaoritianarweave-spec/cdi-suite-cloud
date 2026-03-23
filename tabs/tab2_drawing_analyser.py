@@ -92,14 +92,27 @@ Produce a COMPLETE construction budget table grouped by category. Use current ty
 [At the end add:]
 | | **小计 — 全部项目** | | | | | **[sum]** | |
 | | **不可预见费 (10%)** | | | | | **[10% of subtotal]** | |
-| | **合计总价** | | | | | **[subtotal + contingency]** | |
+| | **建安工程小计** | | | | | **[subtotal + contingency]** | |
+
+### 项目总造价汇总
+
+| 费用项目 | 费率 | 金额 (RMB) |
+|----------|------|------------|
+| 建安工程小计 | — | [同上] |
+| 施工单位管理费及利润 (15%) | 建安工程小计的 15% | [计算] |
+| 设计及勘察费 | 建安工程小计的 6% | [计算] |
+| 规费及报建费 | 建安工程小计的 3% | [计算] |
+| **合计 (不含税)** | | **[以上合计]** |
+| 增值税 (9%) | 合计不含税的 9% | [计算] |
+| **项目总投资 (含税)** | | **[最终总价]** |
 
 ### 预算概要
-- 总造价估算: ¥X
+- 项目总投资 (含税): ¥X
 - 单位面积造价 (如可识别建筑面积): ¥X/m²
 - 主要成本构成: [前3项高价项目]
 - 高不确定性项目: [需进一步核价的项目]
 - 建议预留费用: [暂估价/暂定金额]
+- 注: 管理费及利润、设计费、规费为参考估算，实际费率因项目规模及承包方式而异。
 """
     else:
         qto_block = """
@@ -151,14 +164,27 @@ Produce a COMPLETE construction budget table grouped by category. If a project l
 [At the end add:]
 | | **SUBTOTAL — All Items** | | | | | **[sum]** | |
 | | **Contingency (10%)** | | | | | **[10% of subtotal]** | |
-| | **GRAND TOTAL** | | | | | **[subtotal + contingency]** | |
+| | **CONSTRUCTION SUBTOTAL** | | | | | **[subtotal + contingency]** | |
+
+### Project Cost Summary
+
+| Item | Rate | Amount (AUD) |
+|------|------|--------------|
+| Construction Subtotal | — | [from above] |
+| Builder's Margin (15%) | 15% of construction subtotal | [calculate] |
+| Professional Fees (Design/Engineering) | 8% of construction subtotal | [calculate] |
+| Council & Authority Fees | Approx. 1.5% of construction subtotal | [calculate] |
+| **Subtotal (Ex GST)** | | **[sum of above]** |
+| GST (10%) | 10% of subtotal ex GST | [calculate] |
+| **TOTAL PROJECT COST (Inc GST)** | | **[grand total]** |
 
 ### Budget Summary
-- Total estimated cost: A$X
-- Cost per m² (if GFA identifiable): A$X/m²
+- Total estimated project cost (inc GST): A$X
+- Construction cost per m² (if GFA identifiable): A$X/m²
 - Key cost drivers: [top 3 items by value]
 - High uncertainty items: [items needing further pricing]
 - Recommended allowances: [any provisional sums]
+- Note: Builder's margin, professional fees, and council fees are indicative estimates. Actual rates may vary by project scope and contractor.
 """
 
     if is_cn:
