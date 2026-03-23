@@ -509,11 +509,16 @@ def render_sidebar():
             # Upgrade / Manage buttons
             if is_stripe_configured():
                 if plan in ("free", "beta", "pro"):
+                    # Auto-show pricing dialog once on first login for free/beta users
+                    if plan in ("free", "beta") and "pricing_shown_once" not in st.session_state:
+                        st.session_state["pricing_shown_once"] = True
+                        st.session_state["show_pricing"] = True
+
                     # "View Plans" button opens pricing dialog
                     if st.button(t("view_plans"), use_container_width=True, type="primary"):
                         st.session_state["show_pricing"] = True
 
-                    if st.session_state.get("show_pricing"):
+                    if st.session_state.pop("show_pricing", False):
                         _render_pricing_dialog(user, plan, create_checkout_session)
 
                 if plan in ("pro", "max", "enterprise"):
