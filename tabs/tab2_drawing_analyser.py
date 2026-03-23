@@ -42,7 +42,45 @@ def _build_analysis_prompt(focus_keys: list[str]) -> str:
     from utils.i18n import get_region
     is_cn = get_region() == "cn"
 
-    qto_block = """
+    if is_cn:
+        qto_block = """
+## QUANTITY TAKE-OFF
+
+| 项目 | 描述 | 工程量 | 单位 | 计量方法 | 备注 |
+|------|------|--------|------|----------|------|
+[提取所有可计量项目，包括：混凝土 (m³)、钢筋 (t)、土方 (m³)、管道 (m)、检查井 (座)、路缘石 (m)、路面 (m²)、绿化 (m²)、围栏 (m) 等。]
+[从图纸中直接读取尺寸，必要时展示计算过程。]
+
+### 工程量汇总
+- 提取项目总数: X
+- 主要成本构成: [列表]
+- 需现场核实项目: [列表]
+"""
+
+        errors_block = """
+## DISCREPANCIES & ERRORS
+
+| 序号 | 类型 | 位置 | 描述 | 严重程度 | 建议 |
+|------|------|------|------|----------|------|
+[检查：缺失尺寸、比例不一致、构件冲突、标注不完整、非标准符号、排水坡度问题、净空违规、缺少引用、图框错误、指北针问题]
+严重程度标识: 🔴 严重, 🟡 警告, 🟢 轻微
+
+### 差异汇总
+- 🔴 严重 (出图前必须修正): X
+- 🟡 警告 (建议复核): Y
+- 🟢 轻微 (备注记录): Z
+"""
+
+        compliance_block = """
+## COMPLIANCE OBSERVATIONS
+
+| 规范标准 | 条款 | 状态 | 审查意见 |
+|----------|------|------|----------|
+[对照检查: GB 50011 (抗震), GB 50015 (给排水), JGJ 100 (停车), GB 50763 (无障碍), GB 50016 (消防), 当地规划法规等]
+状态标识: ✅ 通过, ⚠️ 待确认, ❌ 不合规
+"""
+    else:
+        qto_block = """
 ## QUANTITY TAKE-OFF
 
 | Item | Description | Quantity | Unit | Measurement Method | Notes |
@@ -56,7 +94,7 @@ def _build_analysis_prompt(focus_keys: list[str]) -> str:
 - Items requiring field verification: [list]
 """
 
-    errors_block = """
+        errors_block = """
 ## DISCREPANCIES & ERRORS
 
 | # | Type | Location | Description | Severity | Recommendation |
@@ -68,16 +106,6 @@ Use severity indicators: 🔴 Critical, 🟡 Warning, 🟢 Minor
 - 🔴 Critical (must fix before issue): X
 - 🟡 Warning (should review): Y
 - 🟢 Minor (note for record): Z
-"""
-
-    if is_cn:
-        compliance_block = """
-## COMPLIANCE OBSERVATIONS
-
-| Standard | Clause | Status | Observation |
-|----------|--------|--------|-------------|
-[Check against: GB 50011 (seismic), GB 50015 (plumbing/drainage), JGJ 100 (parking), GB 50763 (accessibility), GB 50016 (fire protection), local planning regulations as applicable]
-Use status: ✅ Pass, ⚠️ Flag, ❌ Fail
 """
         budget_block = """
 ## BUDGET ESTIMATE
@@ -133,7 +161,13 @@ Produce a COMPLETE construction budget table grouped by category. Use current ty
 - Recommended allowances: [any provisional sums]
 """
 
-    constructability_block = """
+    if is_cn:
+        constructability_block = """
+## CONSTRUCTABILITY NOTES
+[关于施工顺序、机械进场通道、分期施工、与现有管线冲突、临时工程需求及可施工性问题的实际观察和建议。]
+"""
+    else:
+        constructability_block = """
 ## CONSTRUCTABILITY NOTES
 [Practical observations about construction sequence, access for plant, staging, potential clashes with existing services, temporary works requirements, and any buildability concerns.]
 """
