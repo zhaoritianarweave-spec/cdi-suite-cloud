@@ -141,7 +141,7 @@ Use status: ✅ Pass, ⚠️ Flag, ❌ Fail
         budget_block = """
 ## BUDGET ESTIMATE
 
-Produce a COMPLETE construction budget table grouped by category. Use current typical Australian market rates based on NSW (New South Wales) standards and pricing.
+Produce a COMPLETE construction budget table grouped by category. If a project location or state can be identified from the drawings (e.g. address, council name, title block), use market rates specific to that state/region. If no location is identifiable, default to NSW (New South Wales) market rates.
 
 | # | Category | Item | Qty | Unit | Unit Rate (AUD) | Amount (AUD) | Notes |
 |---|----------|------|-----|------|-----------------|--------------|-------|
