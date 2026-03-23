@@ -100,7 +100,7 @@ Produce a COMPLETE construction budget table grouped by category. Use current ty
 |----------|------|------------|
 | 建安工程小计 | — | [同上] |
 | 施工单位管理费及利润 (15%) | 建安工程小计的 15% | [计算] |
-| 设计及勘察费 | 建安工程小计的 6% | [计算] |
+| 设计及勘察费 | 建安工程小计的 3% | [计算] |
 | 规费及报建费 | 建安工程小计的 3% | [计算] |
 | **合计 (不含税)** | | **[以上合计]** |
 | 增值税 (9%) | 合计不含税的 9% | [计算] |
@@ -172,7 +172,7 @@ Produce a COMPLETE construction budget table grouped by category. If a project l
 |------|------|--------------|
 | Construction Subtotal | — | [from above] |
 | Builder's Margin (15%) | 15% of construction subtotal | [calculate] |
-| Professional Fees (Design/Engineering) | 8% of construction subtotal | [calculate] |
+| Professional Fees (Design/Engineering) | 5% of construction subtotal | [calculate] |
 | Council & Authority Fees | Approx. 1.5% of construction subtotal | [calculate] |
 | **Subtotal (Ex GST)** | | **[sum of above]** |
 | GST (10%) | 10% of subtotal ex GST | [calculate] |
