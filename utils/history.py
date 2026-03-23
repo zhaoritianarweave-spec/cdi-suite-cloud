@@ -44,7 +44,7 @@ def get_history(user_id: str, limit: int = 20) -> list[dict]:
     try:
         res = (
             sb.table("analysis_history")
-            .select("id, tab, title, result_summary, created_at")
+            .select("id, tab, title, result_summary, result_data, created_at")
             .eq("user_id", user_id)
             .order("created_at", desc=True)
             .limit(limit)
