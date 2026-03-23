@@ -429,6 +429,7 @@ def render():
                         _user["id"], "drawing_analyser",
                         f"Drawing Analysis — {', '.join(focus_keys)}",
                         result_text[:500],
+                        result_text,
                     )
                 except Exception:
                     pass
