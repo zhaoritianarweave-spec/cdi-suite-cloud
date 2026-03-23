@@ -79,6 +79,28 @@ def _build_analysis_prompt(focus_keys: list[str]) -> str:
 [对照检查: GB 50011 (抗震), GB 50015 (给排水), JGJ 100 (停车), GB 50763 (无障碍), GB 50016 (消防), 当地规划法规等]
 状态标识: ✅ 通过, ⚠️ 待确认, ❌ 不合规
 """
+        budget_block = """
+## BUDGET ESTIMATE
+
+Produce a COMPLETE construction budget table grouped by category. Use current typical Chinese market rates (reference GB 50500).
+
+| 序号 | 分类 | 项目 | 工程量 | 单位 | 单价 (RMB) | 合价 (RMB) | 备注 |
+|------|------|------|--------|------|-----------|-----------|------|
+[Extract EVERY costed item from the drawing. Group by category (e.g. 土方工程, 结构工程, 排水工程, 路面工程, 景观绿化, 围栏工程, 配套设施).]
+[Calculate 合价 = 工程量 × 单价 for each row.]
+[After each category group, insert a SUBTOTAL row in bold.]
+[At the end add:]
+| | **小计 — 全部项目** | | | | | **[sum]** | |
+| | **不可预见费 (10%)** | | | | | **[10% of subtotal]** | |
+| | **合计总价** | | | | | **[subtotal + contingency]** | |
+
+### 预算概要
+- 总造价估算: ¥X
+- 单位面积造价 (如可识别建筑面积): ¥X/m²
+- 主要成本构成: [前3项高价项目]
+- 高不确定性项目: [需进一步核价的项目]
+- 建议预留费用: [暂估价/暂定金额]
+"""
     else:
         qto_block = """
 ## QUANTITY TAKE-OFF
@@ -107,29 +129,7 @@ Use severity indicators: 🔴 Critical, 🟡 Warning, 🟢 Minor
 - 🟡 Warning (should review): Y
 - 🟢 Minor (note for record): Z
 """
-        budget_block = """
-## BUDGET ESTIMATE
 
-Produce a COMPLETE construction budget table grouped by category. Use current typical Chinese market rates (reference GB 50500).
-
-| 序号 | 分类 | 项目 | 工程量 | 单位 | 单价 (RMB) | 合价 (RMB) | 备注 |
-|------|------|------|--------|------|-----------|-----------|------|
-[Extract EVERY costed item from the drawing. Group by category (e.g. 土方工程, 结构工程, 排水工程, 路面工程, 景观绿化, 围栏工程, 配套设施).]
-[Calculate 合价 = 工程量 × 单价 for each row.]
-[After each category group, insert a SUBTOTAL row in bold.]
-[At the end add:]
-| | **小计 — 全部项目** | | | | | **[sum]** | |
-| | **不可预见费 (10%)** | | | | | **[10% of subtotal]** | |
-| | **合计总价** | | | | | **[subtotal + contingency]** | |
-
-### 预算概要
-- 总造价估算: ¥X
-- 单位面积造价 (如可识别建筑面积): ¥X/m²
-- 主要成本构成: [前3项高价项目]
-- 高不确定性项目: [需进一步核价的项目]
-- 建议预留费用: [暂估价/暂定金额]
-"""
-    else:
         compliance_block = """
 ## COMPLIANCE OBSERVATIONS
 
