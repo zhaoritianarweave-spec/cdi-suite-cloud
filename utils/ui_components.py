@@ -544,51 +544,29 @@ def render_sidebar():
                         "drawing_analyser": "📐",
                         "contract_guard": "📜",
                     }
-                    from utils.history import get_history_detail
                     for h in history:
                         icon = tab_icons.get(h["tab"], "📄")
                         date = h["created_at"][:10] if h.get("created_at") else ""
                         title = h.get("title", "Analysis")
+                        summary = h.get("result_summary", "")
                         # Text-based tabs get download button
                         if h["tab"] in ("drawing_analyser", "contract_guard"):
-                            col_title, col_dl = st.columns([4, 1])
-                            with col_title:
-                                st.markdown(
-                                    f"<div style='padding:4px 0;'>"
-                                    f"<span style='font-size:0.8rem;'>{icon} {title}</span><br>"
-                                    f"<span style='color:#8B949E;font-size:0.7rem;'>{date}</span>"
-                                    f"</div>",
-                                    unsafe_allow_html=True,
-                                )
-                            with col_dl:
-                                dl_key = f"dl_{h['id']}"
-                                if st.button("⬇", key=dl_key, help="Download"):
-                                    detail = get_history_detail(h["id"])
-                                    if detail and detail.get("result_data"):
-                                        import json as _json
-                                        data = detail["result_data"]
-                                        if isinstance(data, str):
-                                            try:
-                                                parsed = _json.loads(data)
-                                                if isinstance(parsed, dict):
-                                                    # Contract Guard JSON → markdown
-                                                    content = _json.dumps(parsed, indent=2, ensure_ascii=False)
-                                                else:
-                                                    content = data
-                                            except _json.JSONDecodeError:
-                                                content = data
-                                        else:
-                                            content = _json.dumps(data, indent=2, ensure_ascii=False)
-                                        st.session_state[f"dl_content_{h['id']}"] = content
-                                if st.session_state.get(f"dl_content_{h['id']}"):
-                                    st.download_button(
-                                        "📥",
-                                        data=st.session_state[f"dl_content_{h['id']}"],
-                                        file_name=f"{title.replace(' ', '_')}_{date}.md",
-                                        mime="text/markdown",
-                                        key=f"dlbtn_{h['id']}",
-                                    )
-                            st.markdown("<div style='border-bottom:1px solid #21262D;'></div>", unsafe_allow_html=True)
+                            st.markdown(
+                                f"<div style='padding:4px 0;'>"
+                                f"<span style='font-size:0.8rem;'>{icon} {title}</span><br>"
+                                f"<span style='color:#8B949E;font-size:0.7rem;'>{date}</span>"
+                                f"</div>",
+                                unsafe_allow_html=True,
+                            )
+                            st.download_button(
+                                "Download" if t("log_in") != "登录" else "下载",
+                                data=f"# {title}\n\n{date}\n\n{summary}",
+                                file_name=f"{title.replace(' ', '_')}_{date}.md",
+                                mime="text/markdown",
+                                key=f"dl_{h['id']}",
+                                use_container_width=True,
+                            )
+                            st.markdown("<div style='border-bottom:1px solid #21262D;margin-top:4px;'></div>", unsafe_allow_html=True)
                         else:
                             # Image-based (site_renderer) - view only
                             st.markdown(
