@@ -10,18 +10,25 @@ def _get_supabase():
     return st.session_state.get("supabase_client")
 
 
-def save_history(user_id: str, tab: str, title: str, result_summary: str, result_data: dict | list | None = None):
+def save_history(user_id: str, tab: str, title: str, result_summary: str, result_data=None):
     """Save an analysis result to history."""
     sb = _get_supabase()
     if sb is None:
         return False
     try:
+        # Convert result_data to string for text column
+        data_str = None
+        if result_data is not None:
+            if isinstance(result_data, str):
+                data_str = result_data
+            else:
+                data_str = json.dumps(result_data, ensure_ascii=False)
         row = {
             "user_id": user_id,
             "tab": tab,
             "title": title,
             "result_summary": result_summary[:500] if result_summary else "",
-            "result_data": json.dumps(result_data, ensure_ascii=False) if result_data else None,
+            "result_data": data_str,
             "created_at": datetime.now(timezone.utc).isoformat(),
         }
         sb.table("analysis_history").insert(row).execute()

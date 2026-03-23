@@ -559,21 +559,7 @@ def render_sidebar():
                                 unsafe_allow_html=True,
                             )
                             # Use full result_data if available, fallback to summary
-                            dl_content = summary
-                            raw_data = h.get("result_data")
-                            if raw_data:
-                                import json as _json
-                                if isinstance(raw_data, str):
-                                    try:
-                                        parsed = _json.loads(raw_data)
-                                        if isinstance(parsed, str):
-                                            dl_content = parsed
-                                        elif isinstance(parsed, dict):
-                                            dl_content = _json.dumps(parsed, indent=2, ensure_ascii=False)
-                                    except _json.JSONDecodeError:
-                                        dl_content = raw_data
-                                elif isinstance(raw_data, dict):
-                                    dl_content = _json.dumps(raw_data, indent=2, ensure_ascii=False)
+                            dl_content = h.get("result_data") or summary
                             st.download_button(
                                 "Download" if t("log_in") != "登录" else "下载",
                                 data=f"# {title}\n\n{date}\n\n{dl_content}",
