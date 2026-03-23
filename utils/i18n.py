@@ -20,10 +20,10 @@ TRANSLATIONS = {
     },
     "feat_analyser_title": {"en": "Drawing Analyser", "zh": "图纸分析器"},
     "feat_analyser_desc": {
-        "en": "Quantity takeoff, BCA/AS compliance checks and drawing discrepancy detection, based on Australian laws and regulations.",
-        "en_cn": "Quantity takeoff, GB standard compliance checks and drawing discrepancy detection, based on Chinese laws and regulations.",
-        "zh": "工程量提取、BCA/AS 合规检查与图纸差异检测，依据澳洲法律法规。",
-        "zh_cn": "工程量提取、GB 国标合规检查与图纸差异检测，依据中国法律法规。",
+        "en": "Quantity takeoff, budget estimation, BCA/AS compliance checks and drawing discrepancy detection, based on Australian laws and regulations.",
+        "en_cn": "Quantity takeoff, budget estimation, GB standard compliance checks and drawing discrepancy detection, based on Chinese laws and regulations.",
+        "zh": "工程量提取、预算估算、BCA/AS 合规检查与图纸差异检测，依据澳洲法律法规。",
+        "zh_cn": "工程量提取、预算估算、GB 国标合规检查与图纸差异检测，依据中国法律法规。",
     },
     "feat_contract_title": {"en": "ContractGuard", "zh": "合同卫士"},
     "feat_contract_desc": {
